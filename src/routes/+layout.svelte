@@ -3,27 +3,64 @@
 
 <script lang="ts">
 	import Background from '$lib/components/Background.svelte';
+	import SocialIcon from '$lib/components/SocialIcon.svelte';
 	import { page } from '$app/stores';
+	import Link from '$lib/components/Link.svelte';
 
 	$: currPage = $page.url.pathname.split('/')[1];
-	console.log(currPage);
 </script>
 
-<Background />
-<nav>
-	<div class="logo">
-		<a href="/">artas maximus</a>
-	</div>
+<div class="app">
+	<Background />
+	<nav id="navbar">
+		<div class="logo">
+			<a href="/">artas maximus</a>
+		</div>
 
-	<div class="navLinks">
-		<a href={'/projects'} class:active={currPage === 'projects'}>projects</a>
-		<a href={'/illustrations'} class:active={currPage === 'illustrations'}>illustrations</a>
-		<a href={'/contact'} class:active={currPage === 'contact'}>contact</a>
+		<div class="navLinks">
+			<Link href={'/projects'} active={currPage === 'projects'}>projects</Link>
+			<Link href={'/illustrations'} active={currPage === 'illustrations'}>illustrations</Link>
+			<Link href={'/contact'} active={currPage === 'contact'}>contact</Link>
+		</div>
+	</nav>
+	<div class="content">
+		<slot></slot>
 	</div>
-</nav>
-<slot></slot>
+	<div class="footer">
+		<div class="socialIcons">
+			<SocialIcon
+				iconName="facebook"
+				href="https://www.facebook.com/profile.php?id=100009427889455"
+			/>
+			<SocialIcon iconName="github" href="https://github.com/artasmaximus" />
+			<SocialIcon iconName="instagram" href="https://www.instagram.com/artasmaximus.a" />
+			<SocialIcon iconName="linkedin" href="https://www.linkedin.com/in/artasalajbegu/" />
+		</div>
+	</div>
+</div>
 
 <style>
+	.app {
+		display: flex;
+		flex-direction: column;
+		font-family: 'Urbanist', sans-serif;
+		justify-content: space-between;
+		height: 100vh;
+	}
+
+	.footer {
+		display: flex;
+		justify-content: left;
+		width: auto;
+		height: auto;
+		padding: 32px;
+	}
+
+	.socialIcons {
+		display: flex;
+		gap: 3rem;
+	}
+
 	nav {
 		padding: 1rem 2rem;
 		display: flex;
@@ -44,30 +81,11 @@
 	}
 
 	.navLinks {
-		font-family: 'Urbanist';
-		font-weight: 300;
 		display: flex;
-		gap: 4rem;
 	}
 
-	.navLinks a {
-		text-decoration: none;
-		color: #1a1a1a;
-		font-weight: 300;
-		min-width: 100px; /* Adjust this value to match the longest link */
-		display: inline-block; /* Ensure that the min-width applies correctly */
-		text-align: center; /* Optional: to center the text within the block */
-		transition:
-			font-weight 0.07s ease-in,
-			color 0.07s ease-in-out,
-			letter-spacing 0.07s ease-in-out;
-	}
-
-	.navLinks a.active {
-		font-weight: 700;
-	}
-
-	.navLinks a:hover {
-		color: black;
+	.content {
+		display: flex;
+		height: auto;
 	}
 </style>

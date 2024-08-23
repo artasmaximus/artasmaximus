@@ -15,7 +15,7 @@
 		position: fixed; /* Ensure the background stays fixed */
 		top: 0;
 		left: 0;
-		width: 100%;
+		width: 100vw;
 		height: 100vh;
 		overflow: hidden; /* Ensure the overflow is hidden to prevent scrollbars */
 		z-index: -1; /* Place behind all content */
