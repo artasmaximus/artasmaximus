@@ -1,17 +1,8 @@
 <script lang="ts">
 	import Link from '$lib/components/Link.svelte';
 	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
 
 	$: currProject = $page.url.pathname.split('/')[2];
-	// onMount(() => {
-	// 	let navBar = document.getElementById('navbar');
-	// 	let navHeight = navBar ? navBar.clientHeight : 50;
-	// 	let projectsContainer = document.getElementById('projectsContainer');
-	// 	if (projectsContainer) {
-	// 		projectsContainer.style.height = `calc(100vh - ${navHeight}px)`;
-	// 	}
-	// });
 </script>
 
 <div class="projectsContainer" id="projectsContainer">
