@@ -2,37 +2,45 @@
 	export let iconName: string;
 	export let href: string;
 	import { onMount } from 'svelte';
+	import Clickable from './Clickable.svelte';
 
 	let src: any;
+
+	let options = { padding_x: 10, padding_y: 10, borderRadius: '10px' };
 
 	onMount(async () => {
 		src = (await import(`$lib/assets/${iconName}.png`)).default;
 	});
 </script>
 
-<div class="socialIcon">
-	<a {href}><img {src} alt={iconName} /></a>
-</div>
+<Clickable {options}>
+	<div class="socialIcon">
+		<a {href}><img {src} alt={iconName} /></a>
+	</div>
+</Clickable>
 
 <style>
 	.socialIcon {
 		display: flex;
 		align-items: center; /* Centers vertically */
 		justify-content: center; /* Centers horizontally */
-		cursor: pointer;
-		transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-		width: 16px;
-		height: 16px;
+		width: 20px;
+		height: 20px;
+	}
+
+	.socialIcon a:hover {
+		cursor: none;
+	}
+
+	.socialIcon a {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.socialIcon img {
 		width: 100%;
 		height: 100%;
-	}
-
-	.socialIcon:hover {
-		transform: scale(1.35);
-		transition: 0.07s ease-in-out;
 	}
 
 	.socialIcon a {
