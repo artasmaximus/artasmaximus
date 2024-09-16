@@ -29,7 +29,7 @@
 		{
 			title: 'Content Wrangling',
 			description:
-				'A personal exploration of modularity, consistency, and theming in design, manifested through a 52-card deck.',
+				'A case study on information architecture and design principles, realized through the creation of a microsite.',
 			href: '/projects/content-wrangling',
 			imgSrc: 'project-cw',
 			imgAlt: 'Wireframe'
@@ -37,7 +37,7 @@
 		{
 			title: 'mini motorways',
 			description:
-				'A personal exploration of modularity, consistency, and theming in design, manifested through a 52-card deck.',
+				'A recreation of the hit Apple Arcade game “mini motorways” built entirely in python using PyGame.',
 			href: '/projects/arcd',
 			imgSrc: 'project-minimotorways',
 			imgAlt: 'Splash Screen'
