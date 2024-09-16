@@ -1,5 +1,4 @@
 <script lang="ts">
-	import PlayingCard from '$lib/components/PlayingCard.svelte';
 	import ProjectCard from '$lib/components/projectCard.svelte';
 
 	let projects = [
@@ -55,12 +54,14 @@
 <style lang="scss">
 	.projects {
 		display: grid;
-		grid: 'a b' 'c d' 'e f';
+		grid: auto-flow / repeat(auto-fill, minmax(350px, 2fr));
 		position: relative;
 		height: 100%;
-		width: fit-content;
+		width: 100%;
 		row-gap: 50px;
 		column-gap: 100px;
 		overflow-y: scroll;
+		place-content: center;
+		place-items: center;
 	}
 </style>
