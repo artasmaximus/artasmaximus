@@ -7,7 +7,7 @@
 </script>
 
 <div class="link">
-	<Clickable {options}>
+	<Clickable>
 		<a {href} class:active>
 			<slot></slot>
 		</a>
@@ -40,11 +40,15 @@
 
 	.link a.active {
 		font-weight: 700;
-		cursor: none;
+		/* cursor: none; */
 	}
 
 	.link a:hover {
 		color: black;
-		cursor: none;
+		transition:
+			color 0.2s,
+			font-weight 0.2s;
+		width: 0.3s;
+		/* cursor: none; */
 	}
 </style>

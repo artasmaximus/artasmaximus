@@ -12,8 +12,7 @@
 </script>
 
 <div class="app" on:pointermove={handlePointerMove}>
-	<Navbar />
-	<Cursor />
+	<div class="navigation"><Navbar /></div>
 	<div class="content">
 		<slot></slot>
 	</div>
@@ -32,16 +31,16 @@
 
 <style>
 	* {
-		cursor: none;
+		/* cursor: none; */
 	}
+
 	.app {
 		display: flex;
 		flex-direction: column;
 		font-family: 'Urbanist', sans-serif;
 		justify-content: space-between;
-		height: 100vh;
+		height: 100%;
 		width: 100%;
-		overflow: hidden;
 		position: relative;
 		background: #fff;
 	}
@@ -65,47 +64,26 @@
 		gap: 4rem;
 	}
 
-	nav {
-		padding: 1rem 2rem;
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-		align-items: center;
-		width: auto;
-		height: auto;
-		position:
-			sticky,
-			-webkit-sticky;
-		box-sizing: border-box;
-		width: 100%;
-		top: 0;
-		left: 0;
-		z-index: 100;
-	}
-
-	.logo a {
-		font-family: 'Playfair Display', serif;
-		font-weight: 800;
-		font-size: clamp(24px, 5vw, 32px);
-		color: rgb(36, 36, 36);
-		text-decoration: none;
-	}
-
-	.logo a:hover {
-		color: black;
-	}
-
-	.navLinks {
-		display: flex;
-	}
-
 	.content {
 		display: flex;
 		flex-direction: column;
 		box-sizing: border-box;
 		padding: 32px;
 		flex: auto;
-		height: auto;
+		height: fit-content;
 		overflow-y: scroll;
+		place-content: center;
+		place-items: center;
+		position: relative;
+	}
+
+	.navigation {
+		position: sticky;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: auto;
+		box-sizing: border-box;
+		z-index: 100;
 	}
 </style>

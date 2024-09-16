@@ -6,14 +6,12 @@
 
 	let src: any;
 
-	let options = { padding_x: 10, padding_y: 10, borderRadius: '10px' };
-
 	onMount(async () => {
 		src = (await import(`$lib/assets/${iconName}.png`)).default;
 	});
 </script>
 
-<Clickable {options}>
+<Clickable>
 	<div class="socialIcon">
 		<a {href}><img {src} alt={iconName} /></a>
 	</div>
@@ -29,7 +27,7 @@
 	}
 
 	.socialIcon a:hover {
-		cursor: none;
+		/* cursor: none; */
 	}
 
 	.socialIcon a {
