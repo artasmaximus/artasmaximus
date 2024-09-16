@@ -39,7 +39,7 @@
 		flex-direction: column;
 		font-family: 'Urbanist', sans-serif;
 		justify-content: space-between;
-		height: 100%;
+		height: max(100%, 100vh);
 		width: 100%;
 		position: relative;
 		background: #fff;
@@ -70,7 +70,7 @@
 		box-sizing: border-box;
 		padding: 32px;
 		flex: auto;
-		height: fit-content;
+		height: auto;
 		overflow-y: scroll;
 		place-content: center;
 		place-items: center;

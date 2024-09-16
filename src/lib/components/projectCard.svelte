@@ -40,7 +40,7 @@
 			width: 100%;
 			img {
 				width: 100%;
-				border-radius: 30px;
+				border-radius: 15px;
 			}
 		}
 		.title {
