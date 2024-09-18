@@ -9,7 +9,7 @@
 
 	let src: any;
 	onMount(async () => {
-		src = (await import(`$lib/assets/illustrations/${imgSrc}.jpeg`)).default;
+		src = (await import(`$lib/assets/illustrations/${imgSrc}.png`)).default;
 	});
 </script>
 
