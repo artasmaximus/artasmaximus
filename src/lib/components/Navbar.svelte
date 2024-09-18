@@ -58,30 +58,28 @@
 </script>
 
 <nav>
-	<div class="wrapper">
-		<div class="navContent">
-			<div class="logo">
-				<a href="/" class:active={currPage === ''}>{title}</a>
-			</div>
-			{#if isMobile}
-				<button class="hamburger" on:click={toggleMenu}>
-					<span class="sr-only">Toggle menu</span>
-					<div class="hamburger-icon" class:open={isMenuOpen}>
-						<span></span>
-						<span></span>
-						<span></span>
-					</div>
-				</button>
-			{:else}
-				<div class="navLinks">
-					{#each items as item}
-						<NavLink href={item.href} active={currPage === item.label} on:click={handleClick}
-							>{item.label}</NavLink
-						>
-					{/each}
-				</div>
-			{/if}
+	<div class="navContent">
+		<div class="logo">
+			<a href="/" class:active={currPage === ''}>{title}</a>
 		</div>
+		{#if isMobile}
+			<button class="hamburger" on:click={toggleMenu}>
+				<span class="sr-only">Toggle menu</span>
+				<div class="hamburger-icon" class:open={isMenuOpen}>
+					<span></span>
+					<span></span>
+					<span></span>
+				</div>
+			</button>
+		{:else}
+			<div class="navLinks">
+				{#each items as item}
+					<NavLink href={item.href} active={currPage === item.label} on:click={handleClick}
+						>{item.label}</NavLink
+					>
+				{/each}
+			</div>
+		{/if}
 	</div>
 </nav>
 
@@ -122,38 +120,10 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
+		gap: auto;
 		align-items: center;
 		box-sizing: border-box;
 		width: 100%;
-		padding: 18px 24px;
-		border-radius: 15px;
-		border: 1px solid rgba(219, 219, 219, 0.5);
-		border: 1px solid color(display-p3 0.8587 0.8587 0.8587 / 0.5);
-		background: rgba(250, 250, 250, 0.5);
-		background: color(display-p3 0.9804 0.9804 0.9804 / 0.5);
-		-webkitbackdrop-filter: blur(15px);
-		backdrop-filter: blur(15px);
-	}
-
-	nav {
-		display: flex;
-		flex-direction: row;
-		place-content: center;
-		margin: 0;
-		padding: 32px;
-		background-color: none;
-		width: 100%;
-		box-sizing: border-box;
-		z-index: 100;
-	}
-
-	.wrapper {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-		justify-content: center;
-		align-items: center;
-		flex-shrink: 0;
 	}
 
 	.hamburger {
@@ -192,22 +162,23 @@
 	}
 
 	.mobile-menu {
-		position: absolute;
-		top: 100px;
+		position: relative;
+		top: 0px;
 		left: 0;
 		right: 0;
 		width: auto;
-		margin: 32px;
+		/* margin: 32px; */
 		box-sizing: border-box;
 		background: rgba(250, 250, 250, 0.5);
 		backdrop-filter: blur(15px);
-		padding: 20px;
+		padding: 32px 20px;
 		display: flex;
 		flex-direction: column;
-		gap: 20px;
-		border-radius: 15px;
+		gap: 30px;
+		/* border-radius: 15px;
 		border: 1px solid rgba(219, 219, 219, 0.5);
-		border: 1px solid color(display-p3 0.8587 0.8587 0.8587 / 0.5);
+		border: 1px solid color(display-p3 0.8587 0.8587 0.8587 / 0.5); */
+		box-shadow: inset 0 30px 30px -35px rgba(0, 0, 0, 0.1);
 	}
 
 	.sr-only {
@@ -225,27 +196,6 @@
 	@media (min-width: 768px) {
 		.navLinks {
 			gap: 32px;
-		}
-		.navContent {
-			gap: 30vw;
-		}
-	}
-
-	@media (max-width: 768px) {
-		.wrapper {
-			padding: 0px 32px 0px 32px;
-		}
-		.navContent {
-			gap: 20vw;
-		}
-	}
-
-	@media (max-width: 480px) {
-		.wrapper {
-			padding: 0px 16px 0px 16px;
-		}
-		.navContent {
-			gap: 10vw;
 		}
 	}
 </style>

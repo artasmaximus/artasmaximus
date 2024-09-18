@@ -54,14 +54,15 @@
 <style lang="scss">
 	.projects {
 		display: grid;
-		grid: auto-flow / repeat(auto-fill, minmax(350px, 1fr));
+		grid: auto-flow / repeat(auto-fill, minmax(350px, 2fr));
 		position: relative;
-		height: 100%;
+		height: fit-content;
 		width: 100%;
-		row-gap: 50px;
-		column-gap: 100px;
-		overflow-y: scroll;
+		row-gap: 1fr;
+		column-gap: 1fr;
 		place-content: center;
 		place-items: center;
+		padding: 0px;
+		margin: 0px;
 	}
 </style>
