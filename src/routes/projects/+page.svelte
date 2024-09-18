@@ -54,7 +54,7 @@
 <style lang="scss">
 	.projects {
 		display: grid;
-		grid: auto-flow / repeat(auto-fill, minmax(350px, 2fr));
+		grid: auto-flow / repeat(auto-fill, minmax(350px, 1fr));
 		position: relative;
 		height: 100%;
 		width: 100%;

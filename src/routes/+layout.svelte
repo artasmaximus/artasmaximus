@@ -7,11 +7,12 @@
 	import { mouseMoveEvent } from '$lib/stores/EventBus';
 
 	function handlePointerMove(event: PointerEvent) {
-		mouseMoveEvent.set({ x: event.clientX, y: event.clientY });
+		mouseMoveEvent.set({ mousex: event.clientX, mousey: event.clientY });
 	}
 </script>
 
 <div class="app" on:pointermove={handlePointerMove}>
+	<Cursor />
 	<div class="navigation"><Navbar /></div>
 	<div class="content">
 		<slot></slot>
@@ -68,7 +69,7 @@
 		display: flex;
 		flex-direction: column;
 		box-sizing: border-box;
-		padding: 32px;
+		padding: 0px 32px 32px 32px;
 		flex: auto;
 		height: auto;
 		overflow-y: scroll;

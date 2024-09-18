@@ -131,6 +131,7 @@
 		border: 1px solid color(display-p3 0.8587 0.8587 0.8587 / 0.5);
 		background: rgba(250, 250, 250, 0.5);
 		background: color(display-p3 0.9804 0.9804 0.9804 / 0.5);
+		-webkitbackdrop-filter: blur(15px);
 		backdrop-filter: blur(15px);
 	}
 

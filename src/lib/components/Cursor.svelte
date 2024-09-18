@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { mouseMoveEvent } from '$lib/stores/EventBus';
 	let DEFAULT_CURSOR_SIZE = 15;
-	const { x, y } = $mouseMoveEvent;
+	const { mousex, mousey } = $mouseMoveEvent;
 </script>
 
 <div
 	class="cursor"
-	style="top: {y - DEFAULT_CURSOR_SIZE / 2}px; left: {x -
+	style="top: {mousey - DEFAULT_CURSOR_SIZE / 2}px; left: {mousex -
 		DEFAULT_CURSOR_SIZE / 2}px; width: {DEFAULT_CURSOR_SIZE}px; height: {DEFAULT_CURSOR_SIZE}px;"
 ></div>
 
