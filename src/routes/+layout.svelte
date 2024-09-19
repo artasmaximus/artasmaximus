@@ -56,10 +56,6 @@
 <style lang="scss">
 	* {
 		/* cursor: none; */
-		::-webkit-scrollbar {
-			display: none;
-		}
-		scrollbar-width: 0px;
 	}
 
 	.app {

@@ -1,25 +1,30 @@
 <script lang="ts">
 	import Illustration from '$lib/components/Illustration.svelte';
 
-	let NUM_ILLUSTRATIONS = 14;
-	let illustrationFileNames: string[] = [];
-	for (let i = 1; i <= NUM_ILLUSTRATIONS; i++) {
-		illustrationFileNames.push(`Illustration${i}`);
+	let NUMBER_OF_IMAGES = 14;
+	let fileName = (i: number) => `Illustration${i}`;
+	let fileNames: string[] = [];
+	for (let i = 1; i <= NUMBER_OF_IMAGES; i++) {
+		fileNames.push(fileName(i));
 	}
 </script>
 
-<div class="grid">
-	{#each illustrationFileNames as illustrationFileName}
-		<Illustration imgSrc={illustrationFileName} imgAlt={illustrationFileName} />
+<div class="imgGrid">
+	{#each fileNames as fileName, i}
+		<div class="illustration">
+			<Illustration {fileName} imgAlt={fileName} />
+		</div>
 	{/each}
 </div>
 
 <style lang="scss">
-	.grid {
+	.imgGrid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-		grid-gap: 1rem;
-		padding: 32px;
-		padding-top: 0px;
+		grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+		gap: 1rem;
+	}
+	.illustration {
+		width: fit-content;
+		height: fit-content;
 	}
 </style>
