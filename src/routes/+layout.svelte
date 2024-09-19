@@ -42,8 +42,32 @@
 				href="https://www.facebook.com/profile.php?id=100009427889455"
 			/>
 			<SocialIcon iconName="github" href="https://github.com/artasmaximus" />
-			<SocialIcon iconName="instagram" href="https://www.instagram.com/artasmaximus.a" />
-			<SocialIcon iconName="linkedin" href="https://www.linkedin.com/in/artasalajbegu/" />
+			<SocialIcon
+				iconName="instagram"
+				href="https://www.instagram.com/artasmaximus.a"
+				socialIconCursorShape={{
+					position: { x: 0, y: 0 },
+					width: 40,
+					height: 40,
+					borderRadius: 15,
+					blendMode: 'difference',
+					fill: 'white',
+					zIndex: 11
+				}}
+			/>
+			<SocialIcon
+				iconName="linkedin"
+				href="https://www.linkedin.com/in/artasalajbegu/"
+				socialIconCursorShape={{
+					position: { x: 0, y: 0 },
+					width: 40,
+					height: 40,
+					borderRadius: 10,
+					blendMode: 'difference',
+					fill: 'white',
+					zIndex: 11
+				}}
+			/>
 		</div>
 	</div>
 </div>
