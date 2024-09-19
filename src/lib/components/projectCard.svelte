@@ -54,6 +54,7 @@
 				font-weight: 800;
 				text-decoration: none;
 				color: #000;
+				cursor: none;
 			}
 		}
 		.description {

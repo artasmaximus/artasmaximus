@@ -106,6 +106,7 @@
 		font-weight: 800;
 		line-height: 93%;
 		letter-spacing: -1.6px;
+		cursor: none;
 	}
 
 	.navLinks {

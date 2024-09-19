@@ -1,22 +1,37 @@
 <script lang="ts">
-	import { mouseMoveEvent } from '$lib/stores/EventBus';
-	let DEFAULT_CURSOR_SIZE = 15;
-	const { mousex, mousey } = $mouseMoveEvent;
+	import RoundedRectangle from './RoundedRectangle.svelte';
+	import { cursorShape, cursorPosition } from '$lib/stores/EventBus';
+	import { isCursorHovered } from '$lib/stores/EventBus';
+
+	let pos = { x: 0, y: 0 };
+	$: {
+		if ($isCursorHovered) {
+			pos = $cursorShape.position;
+		} else {
+			pos = $cursorPosition;
+		}
+	}
+	$: ({ width, height, borderRadius, blendMode, fill, zIndex } = $cursorShape);
+
+	function onpointermove(event: PointerEvent) {
+		cursorPosition.set({ x: event.clientX, y: event.clientY });
+	}
+
+	$: style = `
+		position: fixed;
+		top: 0;
+		left: 0;
+		pointer-events: none;
+		width: 100%;
+		height: 100%;
+		cursor: none;
+		z-index: ${zIndex};
+		mix-blend-mode: ${blendMode};
+	`;
 </script>
 
-<div
-	class="cursor"
-	style="top: {mousey - DEFAULT_CURSOR_SIZE / 2}px; left: {mousex -
-		DEFAULT_CURSOR_SIZE / 2}px; width: {DEFAULT_CURSOR_SIZE}px; height: {DEFAULT_CURSOR_SIZE}px;"
-></div>
+<svelte:window on:pointermove={onpointermove} />
 
-<style>
-	.cursor {
-		position: absolute;
-		background: #fff;
-		border-radius: 50%;
-		pointer-events: none;
-		z-index: 1000;
-		mix-blend-mode: difference;
-	}
-</style>
+<svg {style}>
+	<RoundedRectangle x={pos.x} y={pos.y} {width} {height} {borderRadius} {fill} />
+</svg>

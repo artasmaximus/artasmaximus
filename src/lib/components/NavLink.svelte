@@ -1,14 +1,41 @@
 <script lang="ts">
 	import Clickable from './Clickable.svelte';
+	import type { CursorShape } from '$lib/stores/EventBus';
+	import { onMount } from 'svelte';
 
 	export let href = '';
 	export let active = false;
-	let options = { padding_x: 16, padding_y: 8, borderRadius: '50vh' };
+
+	let link: any;
+	let linkCursorShape: CursorShape;
+
+	let hpadding = 15;
+	let vpadding = 8;
+
+	function getLinkCursorShape(): CursorShape {
+		let rect;
+		if (link) {
+			rect = link.getBoundingClientRect();
+		}
+
+		return {
+			position: { x: 0, y: 0 },
+			width: rect.width + hpadding * 2,
+			height: rect.height + vpadding * 2,
+			borderRadius: (rect.height + vpadding * 2) / 2,
+			blendMode: 'difference',
+			fill: 'white',
+			zIndex: 11
+		};
+	}
+	onMount(() => {
+		linkCursorShape = getLinkCursorShape();
+	});
 </script>
 
 <div class="link">
-	<Clickable>
-		<a {href} class:active>
+	<Clickable hoveredCursorShape={linkCursorShape}>
+		<a {href} class:active bind:this={link}>
 			<slot></slot>
 		</a>
 	</Clickable>
@@ -36,11 +63,13 @@
 		font-style: normal;
 		line-height: normal;
 		letter-spacing: -0.54px;
+		position: relative;
+		z-index: 12;
 	}
 
 	.link a.active {
 		font-weight: 700;
-		/* cursor: none; */
+		cursor: none;
 	}
 
 	.link a:hover {
@@ -49,6 +78,6 @@
 			color 0.2s,
 			font-weight 0.2s;
 		width: 0.3s;
-		/* cursor: none; */
+		cursor: none;
 	}
 </style>

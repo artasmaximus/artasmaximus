@@ -3,13 +3,8 @@
 <script lang="ts">
 	import SocialIcon from '$lib/components/SocialIcon.svelte';
 	import Navbar from '$lib/components/Navbar.svelte';
-	import Cursor from '$lib/components/Cursor.svelte';
-	import { mouseMoveEvent } from '$lib/stores/EventBus';
 	import { onMount } from 'svelte';
-
-	function handlePointerMove(event: PointerEvent) {
-		mouseMoveEvent.set({ mousex: event.clientX, mousey: event.clientY });
-	}
+	import Cursor from '$lib/components/Cursor.svelte';
 
 	let horizontalPadding: number = 32;
 
@@ -34,7 +29,7 @@
 	});
 </script>
 
-<div class="app" on:pointermove={handlePointerMove}>
+<div class="app">
 	<Cursor />
 	<div class="navigation" style="--hpadding: 32px {horizontalPadding}px"><Navbar /></div>
 	<div class="content" style="--hpadding: 32px {horizontalPadding}px">
@@ -55,7 +50,7 @@
 
 <style lang="scss">
 	* {
-		/* cursor: none; */
+		cursor: none;
 	}
 
 	.app {
@@ -106,7 +101,7 @@
 		width: 100%;
 		height: auto;
 		box-sizing: border-box;
-		z-index: 100;
+		z-index: 10;
 		display: flex;
 		flex-direction: column;
 		width: 100%;

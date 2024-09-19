@@ -3,6 +3,17 @@
 	export let href: string;
 	import { onMount } from 'svelte';
 	import Clickable from './Clickable.svelte';
+	import type { CursorShape } from '$lib/stores/EventBus';
+
+	let socialIconCursorShape: CursorShape = {
+		position: { x: 0, y: 0 },
+		width: 40,
+		height: 40,
+		borderRadius: 10,
+		blendMode: 'difference',
+		fill: 'white',
+		zIndex: 11
+	};
 
 	let src: any;
 
@@ -11,7 +22,7 @@
 	});
 </script>
 
-<Clickable>
+<Clickable hoveredCursorShape={socialIconCursorShape}>
 	<div class="socialIcon">
 		<a {href}><img {src} alt={iconName} /></a>
 	</div>
@@ -27,7 +38,7 @@
 	}
 
 	.socialIcon a:hover {
-		/* cursor: none; */
+		cursor: none;
 	}
 
 	.socialIcon a {
