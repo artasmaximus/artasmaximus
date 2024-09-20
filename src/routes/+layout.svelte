@@ -31,9 +31,11 @@
 
 <div class="app">
 	<Cursor />
-	<div class="navigation" style="--hpadding: 32px {horizontalPadding}px"><Navbar /></div>
-	<div class="content" style="--hpadding: 32px {horizontalPadding}px">
-		<slot></slot>
+	<div class="topOfPage">
+		<div class="navigation" style="--hpadding: 32px {horizontalPadding}px"><Navbar /></div>
+		<div class="content" style="--hpadding: 0px {horizontalPadding}px">
+			<slot></slot>
+		</div>
 	</div>
 	<div class="footer" style="--hpadding: 32px {horizontalPadding}px">
 		<div class="socialIcons">
