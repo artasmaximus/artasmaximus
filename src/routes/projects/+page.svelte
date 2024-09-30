@@ -14,7 +14,7 @@
 			title: 'Boom Fit',
 			description:
 				'A Figma prototype of a mobile app that intelligently converts lifestyle aspirations into concrete fitness goals.',
-			href: '/projects/BoomFit',
+			href: '/projects/Boom-Fit',
 			imgSrc: 'project-boomfit',
 			imgAlt: 'iPhone Mockup'
 		},
@@ -22,7 +22,7 @@
 			title: 'SpLaTeX',
 			description:
 				'A python-based web app that employs natural language processing to convert speech into LaTeX code.',
-			href: '/projects/splatex',
+			href: '/projects/SpLaTeX',
 			imgSrc: 'project-splatex',
 			imgAlt: 'Splatex-Logo'
 		},
@@ -30,7 +30,7 @@
 			title: 'Content Wrangling',
 			description:
 				'A case study on information architecture and design principles, realized through the creation of a microsite.',
-			href: '/projects/content-wrangling',
+			href: '/projects/Content-Wrangling',
 			imgSrc: 'project-cw',
 			imgAlt: 'Wireframe'
 		},
@@ -38,7 +38,7 @@
 			title: 'mini motorways',
 			description:
 				'A recreation of the hit Apple Arcade game “mini motorways” built entirely in python using PyGame.',
-			href: '/projects/arcd',
+			href: '/projects/mini-motorways',
 			imgSrc: 'project-minimotorways',
 			imgAlt: 'Splash Screen'
 		}
@@ -64,5 +64,6 @@
 		place-items: center;
 		padding: 0px;
 		margin: 0px;
+		z-index: inherit;
 	}
 </style>

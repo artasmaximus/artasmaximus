@@ -5,6 +5,20 @@
 	import Navbar from '$lib/components/Navbar.svelte';
 	import { onMount } from 'svelte';
 	import Cursor from '$lib/components/Cursor.svelte';
+	import { page } from '$app/stores';
+
+	let isViewingProject = false;
+	let currProject: string = '';
+	$: {
+		currProject = $page.url.pathname.split('/projects/')[1] || '';
+		if (currProject !== '') {
+			isViewingProject = true;
+		} else {
+			isViewingProject = false;
+		}
+	}
+
+	$: projectDisplayName = currProject.split('-').join(' ');
 
 	let horizontalPadding: number = 32;
 
@@ -32,7 +46,18 @@
 <div class="app">
 	<Cursor />
 	<div class="topOfPage">
-		<div class="navigation" style="--hpadding: 32px {horizontalPadding}px"><Navbar /></div>
+		<div class="navAndBanner">
+			<div class="navigation" style="--hpadding: 32px {horizontalPadding}px">
+				<Navbar />
+			</div>
+			{#if isViewingProject}
+				<div class="projectBanner" style="--hpadding: 32px {horizontalPadding}px">
+					<div class="title">
+						{projectDisplayName}
+					</div>
+				</div>
+			{/if}
+		</div>
 		<div class="content" style="--hpadding: 0px {horizontalPadding}px">
 			<slot></slot>
 		</div>
@@ -118,12 +143,10 @@
 		place-items: center;
 		position: relative;
 		padding: var(--hpadding);
+		z-index: 1;
 	}
 
 	.navigation {
-		position: sticky;
-		top: 0;
-		left: 0;
 		width: 100%;
 		height: auto;
 		box-sizing: border-box;
@@ -138,5 +161,39 @@
 		-webkit-backdrop-filter: blur(15px);
 		backdrop-filter: blur(15px);
 		padding: var(--hpadding);
+	}
+
+	.projectBanner {
+		position: relative;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: auto;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: row;
+		width: 100%;
+		justify-content: space-between;
+		flex-shrink: 0;
+		color: #fafafa;
+		background: #101010;
+		-webkit-backdrop-filter: blur(15px);
+		backdrop-filter: blur(15px);
+		padding: var(--hpadding);
+		.title {
+			font-size: 24px;
+			font-weight: 700;
+			font-family: 'Playfair Display', serif;
+		}
+	}
+
+	.navAndBanner {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		position: sticky;
+		top: 0;
+		left: 0;
+		z-index: 10;
 	}
 </style>

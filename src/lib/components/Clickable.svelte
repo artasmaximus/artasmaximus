@@ -68,8 +68,13 @@
 
 <style>
 	.clickable {
+		display: flex;
 		cursor: none;
 		place-items: center;
-		width: fit-content;
+		justify-content: center;
+		align-items: center;
+		align-content: center;
+		width: 100%;
+		height: 100%;
 	}
 </style>

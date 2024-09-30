@@ -35,6 +35,7 @@
 		border-radius: 30px;
 		width: 300px;
 		position: relative;
+		z-index: inherit;
 		.image {
 			position: relative;
 			width: 100%;
