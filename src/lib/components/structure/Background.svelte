@@ -1,5 +1,5 @@
 <script lang="ts">
-	import arcdbg from '$lib/assets/arcdpage/arcdbg.png';
+	import arcdbg from '$lib/assets/arcdPage/arcdbg.png';
 </script>
 
 <div class="bg">

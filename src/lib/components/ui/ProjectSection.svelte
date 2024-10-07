@@ -59,15 +59,6 @@
 	}
 
 	.info {
-		h {
-			color: #000;
-			color: color(display-p3 0 0 0);
-			font-family: Urbanist;
-			font-size: 32px;
-			font-style: normal;
-			font-weight: 800;
-			line-height: normal;
-		}
 		p {
 			max-width: 430px; // Limit the width of the text
 			color: #000;
