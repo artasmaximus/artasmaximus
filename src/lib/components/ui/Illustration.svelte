@@ -2,8 +2,7 @@
 	import { onMount } from 'svelte';
 	import { cursorShape, DEFAULT_CURSOR_SHAPE, GLASS_CURSOR_SHAPE } from '$lib/stores/cursor';
 	import { appDetail } from '$lib/stores/appDetail';
-	import { writable } from 'svelte/store';
-	import { zip, zoomIdentity } from 'd3';
+
 	export let imgSrc: string;
 	export let imgAlt: string;
 	export let maxwidth: number;

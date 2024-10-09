@@ -1,5 +1,5 @@
 <div class="wrapper">
-	<div class="greeting">Curious about mini motorways?</div>
+	<div class="greeting">Curious about SpLaTeX?</div>
 	<p>Don't worry, I'm working on this page right now! Check back soon for more information.</p>
 </div>
 

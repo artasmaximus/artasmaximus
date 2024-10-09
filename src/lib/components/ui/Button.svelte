@@ -5,25 +5,24 @@
 	export let href = '';
 	export let active = false;
 	export let label = '';
+	export let downloadName: string = '';
 
 	let measureStore = createElementMeasureStore();
 </script>
 
-{#if active}
-	<div class="container {active ? 'active' : ''}">
-		<a {href} class:active>
-			{label}
-		</a>
-	</div>
-{:else}
-	<Clickable {measureStore}>
-		<div class="container {active ? 'active' : ''}" use:measureStore.bubble={{ hpad: 3, vpad: 3 }}>
+<Clickable {measureStore}>
+	<div class="container {active ? 'active' : ''}" use:measureStore.bubble={{ hpad: 3, vpad: 3 }}>
+		{#if !downloadName}
 			<a {href} class:active>
 				{label}
 			</a>
-		</div>
-	</Clickable>
-{/if}
+		{:else}
+			<a {href} download={downloadName}>
+				{label}
+			</a>
+		{/if}
+	</div>
+</Clickable>
 
 <style lang="scss">
 	.container {

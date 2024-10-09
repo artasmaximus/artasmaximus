@@ -9,6 +9,8 @@
 	import Banner from '$lib/components/structure/Banner.svelte';
 	import faceCards from '$lib/assets/arcdPage/FaceCards.png';
 	import jokers from '$lib/assets/arcdPage/Jokers.png';
+	import Heading from '$lib/components/ui/Heading.svelte';
+	import Description from '$lib/components/ui/Description.svelte';
 
 	let originSection = {
 		title: 'Origins',
@@ -54,7 +56,7 @@
 		description: [
 			'The Joker card distinguishes itself with a compact and streamlined design, making it smaller and shorter than the other face cards.',
 			'Its unique design exudes a distinct energy, inviting intrigue. A headpiece gracefully floats above the figure, accentuating the Joker’s special status within the deck.',
-			'Additionally, I created an abstract symbol to represent the Joker, moving away from the conventional use of the word “Joker.'
+			'Additionally, I designed an abstract symbol to represent the Joker, moving away from the conventional use of the word “Joker" to label this card'
 		],
 		imageSrc: jokers,
 		layout: 'L' as 'L' | 'R'
@@ -72,11 +74,9 @@
 	<ProjectSection {...faceCardsSection} />
 	<ProjectSection {...jokerSection} />
 	<div class="exhibit" style="width: {$appDetail.contentWidth}px">
-		<div class="header">
-			<h2>See Where it All Began</h2>
-			<p>
-				View the original Figma file where all the design assets that went into making arcd live!
-			</p>
+		<div class="header" id="closing">
+			<Heading>See Where it All Began</Heading>
+			<Description>Explore the original Figma file that started it all.</Description>
 		</div>
 		<iframe
 			style="border: 1px solid rgba(0, 0, 0, 0.1);"
@@ -84,17 +84,22 @@
 			height="500px"
 			src="https://embed.figma.com/design/eRPB90nCMuDbk89wBRW5zW/Card-Deck-Master?node-id=0-1&embed-host=share"
 			allowfullscreen
+			title="arcd Figma"
 		></iframe>
 	</div>
 </div>
 
 <style lang="scss">
+	#closing {
+		text-align: center;
+	}
 	.container {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		width: 100%;
+		gap: 64px;
 	}
 
 	.exhibit {
@@ -102,29 +107,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		.header {
-			padding: 64px 0px;
-			h2 {
-				// center
-				text-align: center;
-			}
-		}
-	}
-
-	.background {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		z-index: -1;
-		overflow: hidden;
-
-		img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-			object-position: center;
-		}
+		padding: 64px 0px;
+		gap: 64px;
 	}
 </style>

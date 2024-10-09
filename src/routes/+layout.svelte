@@ -10,7 +10,7 @@
 	import Footer from '$lib/components/structure/Footer.svelte';
 	import Cursor from '$lib/components/cursor/Cursor.svelte';
 	import Background from '$lib/components/structure/Background.svelte';
-	import { get } from 'svelte/store';
+
 
 	function onPointerMove(event: any) {
 		if (!$isCursorHovered) {
@@ -31,7 +31,7 @@
 		$appDetail.vh = window.innerHeight;
 
 		let windowWidth = window.innerWidth;
-		if (windowWidth < 576) {
+		if (windowWidth < 700) {
 			$appDetail.contentWidth = windowWidth * 0.9;
 			$appDetail.title = 'am';
 			$appDetail.collapseNav = true;

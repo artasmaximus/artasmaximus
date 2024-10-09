@@ -6,7 +6,7 @@
 	import { slide } from 'svelte/transition';
 
 	import Clickable from '../cursor/Clickable.svelte';
-	import NavLink from '../ui/NavLink.svelte';
+	import Button from '../ui/Button.svelte';
 
 	let isMenuOpen = false;
 	let navHeight: number;
@@ -21,23 +21,21 @@
 	export let items: NavbarItem[] = [
 		{ label: 'projects', href: '/projects' },
 		{ label: 'illustrations', href: '/illustrations' },
-		{ label: 'contact', href: '/contact' }
+		{ label: 'contact', href: '/contact' },
+		{ label: 'resume', href: '/resume' }
 	];
 
 	// get current path from store
 	$: currPage = $page.url.pathname.split('/')[1];
 
 	function toggleMenu() {
+		console.log(`switching menu from ${isMenuOpen} to ${!isMenuOpen}`);
 		isMenuOpen = !isMenuOpen;
 	}
 
 	afterUpdate(() => {
 		$appDetail.navBarHeight = navHeight;
 	});
-
-	function logit() {
-		console.log('clicked');
-	}
 </script>
 
 <nav class="blur" bind:clientHeight={navHeight}>
@@ -59,12 +57,12 @@
 		{:else}
 			<div class="navLinks">
 				{#each items as item}
-					<NavLink
+					<Button
 						href={item.href}
 						active={currPage === item.label}
 						label={item.label}
-						on:click={logit}
-					></NavLink>
+						on:click={toggleMenu}
+					></Button>
 				{/each}
 			</div>
 		{/if}
@@ -73,12 +71,12 @@
 {#if $appDetail.collapseNav && isMenuOpen}
 	<div class="mobile-menu blur" in:slide out:slide>
 		{#each items as item}
-			<NavLink
+			<Button
 				href={item.href}
 				active={currPage === item.label}
 				on:click={toggleMenu}
 				label={item.label}
-			></NavLink>
+			></Button>
 		{/each}
 	</div>
 {/if}

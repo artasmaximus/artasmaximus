@@ -3,6 +3,7 @@
 	import Clickable from '../cursor/Clickable.svelte';
 	import { createElementMeasureStore, type UnderlineOptions } from '$lib/stores/elementMeasure';
 	import { cursorShape, GLASS_CURSOR_SHAPE, DEFAULT_CURSOR_SHAPE } from '$lib/stores/cursor';
+	import Description from './Description.svelte';
 
 	export let title: string;
 	export let description: string;
@@ -38,6 +39,7 @@
 		<h3>{title}</h3>
 		<Clickable {measureStore}>
 			<a {href}>
+				<!-- arrow button -->
 				<svg
 					width="57"
 					height="37"
@@ -66,7 +68,9 @@
 		</Clickable>
 	</div>
 	<div class="description">
-		<p>{description}</p>
+		<p>
+			{description}
+		</p>
 	</div>
 </div>
 
