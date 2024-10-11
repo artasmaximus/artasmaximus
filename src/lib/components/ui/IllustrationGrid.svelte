@@ -79,7 +79,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		z-index: 1000; // Ensure it's above the navbar
+		z-index: 9; // Ensure it's above the navbar
 	}
 
 	.selected-image-container {
@@ -100,12 +100,12 @@
 		font-size: 20px;
 		line-height: 1;
 		cursor: pointer;
-		z-index: 1001;
+		z-index: 10;
 	}
 
 	@media (max-width: 768px) {
 		.illustration-grid {
-			gap: 30px;
+			gap: 64px;
 		}
 	}
 </style>

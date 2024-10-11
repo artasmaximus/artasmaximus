@@ -61,7 +61,7 @@
 <style>
 	.closeButton {
 		position: relative;
-		z-index: 202;
+		z-index: 10;
 		top: 20px;
 		right: 20px;
 	}

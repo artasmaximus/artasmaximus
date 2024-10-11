@@ -2,7 +2,7 @@
 
 <script lang="ts">
 	import { cursorPosition, customCursorPosition, isCursorHovered } from '$lib/stores/cursor';
-	import { appDetail } from '$lib/stores/appDetail';
+	import { appDetail, isTouchInputDevice } from '$lib/stores/appDetail';
 	import { onMount } from 'svelte';
 
 	// components
@@ -10,7 +10,6 @@
 	import Footer from '$lib/components/structure/Footer.svelte';
 	import Cursor from '$lib/components/cursor/Cursor.svelte';
 	import Background from '$lib/components/structure/Background.svelte';
-
 
 	function onPointerMove(event: any) {
 		if (!$isCursorHovered) {
@@ -53,6 +52,7 @@
 	onMount(() => {
 		handleResize(null);
 		window.addEventListener('resize', handleResize);
+		$appDetail.isTouchInput = isTouchInputDevice();
 	});
 </script>
 
@@ -84,7 +84,6 @@
 		width: 100%;
 		box-sizing: border-box;
 		background: #fff;
-		z-index: 0;
 		scroll-behavior: smooth;
 	}
 

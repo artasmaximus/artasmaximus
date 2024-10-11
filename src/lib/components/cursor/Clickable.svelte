@@ -5,9 +5,8 @@
 		isCursorHovered,
 		DEFAULT_CURSOR_SHAPE
 	} from '$lib/stores/cursor';
-	import type { Writable } from 'svelte/store';
 	import type { ElementMeasurements } from '$lib/stores/elementMeasure';
-	import { onDestroy, tick } from 'svelte';
+	import { onDestroy } from 'svelte';
 
 	export let tag: keyof HTMLElementTagNameMap = 'div';
 	export let className: string = '';
@@ -28,10 +27,8 @@
 		}
 	};
 
-	const handleMouseLeave = async (e: any) => {
+	const handleMouseLeave = (e: any) => {
 		isCursorHovered.set(false);
-		cursorPosition.set({ x: e.clientX, y: e.clientY });
-		await tick();
 		cursorShape.set(DEFAULT_CURSOR_SHAPE);
 	};
 

@@ -87,7 +87,7 @@
 		position: fixed;
 		top: 0;
 		left: 0;
-		z-index: 1000; /* Ensures the cursor is on top */
+		z-index: 11; /* Ensures the cursor is on top */
 		pointer-events: none; /* Allows the cursor to pass through */
 		transition: background-color 0.3s ease-in-out;
 	}

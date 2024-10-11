@@ -1,4 +1,4 @@
-import { get, writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 import { tick } from 'svelte';
 import {
 	cursorShape,
@@ -15,20 +15,20 @@ export interface ElementMeasurements {
 
 export interface UnderlineOptions {
 	thickness?: number;
-	bg?: string;
-	mbm?: string;
-	distance?: number;
-	br?: number;
+	background?: string;
+	blendMode?: string;
+	underlineDistance?: number;
+	borderRadius?: number;
 }
 
 export interface BubbleOptions {
-	hpad?: number;
-	vpad?: number;
-	br?: number;
-	bg?: string;
-	mbm?: string;
-	bw?: number;
-	bc?: string;
+	hPadding?: number;
+	vPadding?: number;
+	borderRadius?: number;
+	background?: string;
+	blendMode?: string;
+	borderWidth?: number;
+	borderColor?: string;
 }
 
 type MeasureOptions = UnderlineOptions | BubbleOptions;
@@ -38,13 +38,13 @@ function underline(rect: DOMRect, options: UnderlineOptions): ElementMeasurement
 		cursorShape: {
 			width: rect.width,
 			height: options.thickness ?? 3,
-			borderRadius: options.br ?? (options.thickness ?? 3) / 2,
-			backgroundColor: options.bg ?? 'white',
-			mixBlendMode: options.mbm ?? 'difference'
+			borderRadius: options.borderRadius ?? (options.thickness ?? 3) / 2,
+			backgroundColor: options.background ?? 'white',
+			mixBlendMode: options.blendMode ?? 'difference'
 		},
 		cursorPosition: {
 			x: rect.left,
-			y: rect.bottom + (options.distance ?? 2)
+			y: rect.bottom + (options.underlineDistance ?? 2)
 		}
 	};
 }
@@ -52,17 +52,17 @@ function underline(rect: DOMRect, options: UnderlineOptions): ElementMeasurement
 function bubble(rect: DOMRect, options: BubbleOptions): ElementMeasurements {
 	return {
 		cursorShape: {
-			width: rect.width + (options.hpad ?? 0) * 2,
-			height: rect.height + (options.vpad ?? 0) * 2,
-			borderRadius: options.br ?? (rect.height + (options.vpad ?? 0) * 2) / 2,
-			backgroundColor: options.bg ?? 'white',
-			mixBlendMode: options.mbm ?? 'difference',
-			borderColor: options.bc ?? 'transparent',
-			borderWidth: options.bw ?? 0
+			width: rect.width + (options.hPadding ?? 0) * 2,
+			height: rect.height + (options.vPadding ?? 0) * 2,
+			borderRadius: options.borderRadius ?? (rect.height + (options.vPadding ?? 0) * 2) / 2,
+			backgroundColor: options.background ?? 'white',
+			mixBlendMode: options.blendMode ?? 'difference',
+			borderColor: options.borderColor ?? 'transparent',
+			borderWidth: options.borderWidth ?? 0
 		},
 		cursorPosition: {
-			x: rect.left - (options.hpad ?? 0),
-			y: rect.top - (options.vpad ?? 0)
+			x: rect.left - (options.hPadding ?? 0),
+			y: rect.top - (options.vPadding ?? 0)
 		}
 	};
 }
@@ -74,13 +74,12 @@ export function createElementMeasureStore() {
 		measureLogic: (rect: DOMRect, options: MeasureOptions) => ElementMeasurements
 	) {
 		return (node: HTMLElement | SVGSVGElement, options: MeasureOptions) => {
-			const update = async () => {
-				await tick();
+			const update = () => {
 				let rect = node.getBoundingClientRect();
 				set(measureLogic(rect, options));
 			};
 
-			update(); // Initial measurement
+			setTimeout(update, 150);
 
 			window.addEventListener('resize', update);
 			window.addEventListener('scroll', update);

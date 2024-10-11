@@ -11,7 +11,10 @@
 </script>
 
 <Clickable {measureStore}>
-	<div class="container {active ? 'active' : ''}" use:measureStore.bubble={{ hpad: 3, vpad: 3 }}>
+	<div
+		class="container {active ? 'active' : ''}"
+		use:measureStore.bubble={{ hPadding: 3, vPadding: 3 }}
+	>
 		{#if !downloadName}
 			<a {href} class:active>
 				{label}

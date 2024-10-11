@@ -69,7 +69,7 @@
 	</div>
 </nav>
 {#if $appDetail.collapseNav && isMenuOpen}
-	<div class="mobile-menu blur" in:slide out:slide>
+	<div class="mobile-menu blur" in:slide={{ duration: 150 }} out:slide={{ duration: 150 }}>
 		{#each items as item}
 			<Button
 				href={item.href}

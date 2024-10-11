@@ -17,7 +17,10 @@
 </script>
 
 <Clickable {measureStore}>
-	<div class="socialIcon" use:measureStore.bubble={{ hpad: 5, vpad: 5, br: borderRadius }}>
+	<div
+		class="socialIcon"
+		use:measureStore.bubble={{ hPadding: 5, vPadding: 5, borderRadius: borderRadius }}
+	>
 		<a {href}><img {src} alt={iconName} /></a>
 	</div>
 </Clickable>

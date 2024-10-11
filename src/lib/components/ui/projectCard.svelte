@@ -46,7 +46,7 @@
 					viewBox="0 0 57 37"
 					fill="none"
 					xmlns="http://www.w3.org/2000/svg"
-					use:measureStore.bubble={{ hpad: 3, vpad: 3 }}
+					use:measureStore.bubble={{ hPadding: 3, vPadding: 3 }}
 				>
 					<rect
 						x="1"

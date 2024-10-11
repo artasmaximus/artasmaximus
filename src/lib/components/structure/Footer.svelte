@@ -34,7 +34,7 @@
 		left: 0;
 		box-sizing: border-box;
 		padding: 32px 0px;
-		z-index: 99;
+		z-index: 10;
 	}
 
 	.footerContent {

@@ -94,7 +94,6 @@
 "
 	on:mouseenter={handleMouseEnter}
 	on:mouseleave={handleLeave}
-	on:click={selectImage}
 	role="complementary"
 >
 	<img {src} alt={imgAlt} />
@@ -115,7 +114,7 @@
 			transform 0.3s ease,
 			box-shadow 0.3s ease,
 			z-index 0.3s ease;
-		z-index: 11;
+		z-index: 10;
 
 		img {
 			display: block;

@@ -159,4 +159,4 @@ function customCursorStore(): CustomCursorStore {
 		setPosition,
 		resetShape
 	};
-}
+} 
