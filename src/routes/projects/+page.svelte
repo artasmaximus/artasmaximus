@@ -20,7 +20,7 @@
 			title: 'Boom Fit',
 			description:
 				'A Figma prototype of a mobile app that intelligently converts lifestyle aspirations into concrete fitness goals.',
-			href: '/projects/Boom-Fit',
+			href: '/projects/boom-fit',
 			imgSrc: boomFitImg,
 			imgAlt: 'iPhone Mockup'
 		},
@@ -36,7 +36,7 @@
 			title: 'Content Wrangling',
 			description:
 				'A case study on information architecture and design principles, realized through the creation of a microsite.',
-			href: '/projects/Content-Wrangling',
+			href: '/projects/content-wrangling',
 			imgSrc: cwImg,
 			imgAlt: 'Wireframe'
 		},

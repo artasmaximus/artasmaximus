@@ -9,6 +9,7 @@
 	import Description from '$lib/components/ui/Description.svelte';
 
 	import Viewable from '$lib/components/ui/Viewable.svelte';
+	import Banner from '$lib/components/structure/Banner.svelte';
 
 	let cwSection = {
 		title: 'Content Wrangling',
@@ -43,6 +44,7 @@
 	};
 </script>
 
+<Banner title="Content Wrangling" />
 <div class="container" style="width: {$appDetail.contentWidth}px">
 	<div id="noImageSection">
 		<Heading>Overview</Heading>

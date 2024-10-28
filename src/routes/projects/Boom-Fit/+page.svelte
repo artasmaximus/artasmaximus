@@ -5,6 +5,7 @@
 	import Description from '$lib/components/ui/Description.svelte';
 
 	import problemSpace from '$lib/assets/boomfitpage/ProblemSpace.png';
+	import Banner from '$lib/components/structure/Banner.svelte';
 
 	let problemSection = {
 		title: 'Problem Space',
@@ -17,6 +18,7 @@
 	};
 </script>
 
+<Banner title="Boom Fit" />
 <div class="container" style="width: {$appDetail.contentWidth}px">
 	<div id="overview">
 		<Heading>Overview</Heading>
