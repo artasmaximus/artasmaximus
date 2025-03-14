@@ -28,7 +28,7 @@
 			title: 'SpLaTeX',
 			description:
 				'A python-based web app that employs natural language processing to convert speech into LaTeX code.',
-			href: '/projects/SpLaTeX',
+			href: '/projects/splatex',
 			imgSrc: splatexImg,
 			imgAlt: 'Splatex-Logo'
 		},

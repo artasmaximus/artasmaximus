@@ -3,9 +3,15 @@
 	import ProjectSection from '$lib/components/ui/ProjectSection.svelte';
 	import Heading from '$lib/components/ui/Heading.svelte';
 	import Description from '$lib/components/ui/Description.svelte';
+	import Feature from '$lib/components/ui/Feature.svelte';
 
 	import problemSpace from '$lib/assets/boomfitpage/ProblemSpace.png';
 	import Banner from '$lib/components/structure/Banner.svelte';
+
+	import goalsFeatureImg from '$lib/assets/features/goalsFeature.jpg';
+	import progressFeatureImg from '$lib/assets/features/progressFeature.jpg';
+	import onboardingFeatureImg from '$lib/assets/features/onboardingFeature.jpg';
+	import Carousel from '$lib/components/ui/Carousel.svelte';
 
 	let problemSection = {
 		title: 'Problem Space',
@@ -16,6 +22,27 @@
 		imageSrc: problemSpace,
 		layout: 'R' as 'L' | 'R'
 	};
+
+	let goalsDetail = {
+		imgSrc: goalsFeatureImg,
+		title: 'Set Goals',
+		description:
+			'Set both lifestyle and fitness goals, and let Boom Fit provide you with personalized recommendations.'
+	};
+	let progressDetail = {
+		imgSrc: progressFeatureImg,
+		title: 'Track Progress',
+		description:
+			'Monitor your progress on all your goals, with expected completion dates and reminders.'
+	};
+	let onboardingDetail = {
+		imgSrc: onboardingFeatureImg,
+		title: 'Personalized Onboarding',
+		description:
+			'Personalize your experience by telling Boom Fit about your available equipment, and workout frequency preferences.'
+	};
+	let featureDetails = [goalsDetail, progressDetail, onboardingDetail];
+	let features = [Feature, Feature, Feature];
 </script>
 
 <Banner title="Boom Fit" />
@@ -36,15 +63,17 @@
 		</Description>
 	</div>
 	<ProjectSection {...problemSection} />
+	<Heading>Features</Heading>
+	<Carousel items={features} itemProps={featureDetails} />
 </div>
 
-<!-- <iframe
+<iframe
 	style="border: 1px solid rgba(0, 0, 0, 0.1);"
 	width="800"
 	height="450"
 	src="https://embed.figma.com/design/LEhD8bTzn4ORXgb6ZDP11b/Hackathon!?node-id=17-1602&embed-host=share"
 	allowfullscreen
-></iframe> -->
+></iframe>
 
 <style>
 	.container {
@@ -63,5 +92,6 @@
 	iframe {
 		width: 800px;
 		height: 400px;
+		margin-top: 64px;
 	}
 </style>

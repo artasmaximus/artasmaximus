@@ -19,13 +19,13 @@
 		place-content: center;
 		position: sticky;
 		box-sizing: border-box;
-		padding: 32px 0px;
+		padding: 18px 0px;
 		left: 0;
 		width: 100%;
 		color: #fafafa;
 		background: #101010;
 		.title {
-			font-size: 24px;
+			font-size: 22px;
 			font-weight: 700;
 			font-family: 'Urbanist', serif;
 		}
