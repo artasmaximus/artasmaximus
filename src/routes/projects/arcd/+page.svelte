@@ -1,10 +1,8 @@
 <script lang="ts">
-	import origins from '$lib/assets/ARCDpics/origins.png';
-	import symbols from '$lib/assets/ARCDpics/symbols.png';
-	import dap from '$lib/assets/ARCDpics/designapproach.png';
-	import CardSymbol from '$lib/components/Symbol/CardSymbol.svelte';
+	import origins from '$lib/assets/arcdpics/origins.png';
+	import symbols from '$lib/assets/arcdpics/symbols.png';
+	import dap from '$lib/assets/arcdpics/designapproach.png';
 	import GradientText from '$lib/components/GradientText.svelte';
-	import Button from '$lib/components/Button/Button.svelte';
 	import IntersectionOberserver from '$lib/components/IntersectionObserver/IntersectionOberserver.svelte';
 	import { scale, fly } from 'svelte/transition';
 

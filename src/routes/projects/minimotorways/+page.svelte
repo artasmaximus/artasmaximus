@@ -41,6 +41,7 @@
 
 {#snippet video()}
 	<iframe
+		title="Mini Motorways Video"
 		src="https://www.youtube.com/embed/GaAHKJQ6lcY?si=5lAKeFCLD4c0Rsce"
 		class="flex h-full w-full"
 		frameborder="0"
