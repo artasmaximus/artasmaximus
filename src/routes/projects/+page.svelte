@@ -1,130 +1,61 @@
 <script lang="ts">
-	import ProjectCard from '$lib/components/ui/projectCard.svelte';
-	import arcdImg from '$lib/assets/project-arcd.jpg';
-	import boomFitImg from '$lib/assets/project-boomfit.jpg';
-	import splatexImg from '$lib/assets/project-splatex.jpg';
-	import cwImg from '$lib/assets/project-cw.jpg';
-	import miniMotorwaysImg from '$lib/assets/project-minimotorways.jpg';
-	import { appDetail } from '$lib/stores/appDetail';
+	import GradientText from '$lib/components/GradientText.svelte';
+	import Section from '$lib/layout/Section.svelte';
+	import ProjectCard from '$lib/components/ProjectCard.svelte';
+	import { scale } from 'svelte/transition';
+	import IntersectionOberserver from '$lib/components/IntersectionObserver/IntersectionOberserver.svelte';
 
-	let projects = [
+	let cards = [
 		{
-			title: 'arcd',
+			title: 'mini motorways',
+			description:
+				'A recreation of the hit Apple Arcade game “mini motorways” built entirely in python using PyGame.',
+			thumbnailName: 'minimotorways',
+			color: '#494435',
+			href: '/Projects/minimotorways'
+		},
+		{
+			title: 'ARCD',
 			description:
 				'A personal exploration of modularity, consistency, and theming in design, manifested through a 52-card deck.',
-			href: '/projects/arcd',
-			imgSrc: arcdImg,
-			imgAlt: 'Playing Cards'
+			thumbnailName: 'arcd',
+			color: '#6452FF',
+			href: '/Projects/arcd'
 		},
 		{
-			title: 'Boom Fit',
+			title: 'BoomFit',
 			description:
 				'A Figma prototype of a mobile app that intelligently converts lifestyle aspirations into concrete fitness goals.',
-			href: '/projects/boom-fit',
-			imgSrc: boomFitImg,
-			imgAlt: 'iPhone Mockup'
-		},
-		{
-			title: 'SpLaTeX',
-			description:
-				'A python-based web app that employs natural language processing to convert speech into LaTeX code.',
-			href: '/projects/splatex',
-			imgSrc: splatexImg,
-			imgAlt: 'Splatex-Logo'
+			thumbnailName: 'boomfit',
+			color: '#2A546C',
+			href: '/Projects/boomfit'
 		},
 		{
 			title: 'Content Wrangling',
 			description:
 				'A case study on information architecture and design principles, realized through the creation of a microsite.',
-			href: '/projects/content-wrangling',
-			imgSrc: cwImg,
-			imgAlt: 'Wireframe'
+			thumbnailName: 'cw'
 		},
 		{
-			title: 'mini motorways',
+			title: 'SpLaTeX',
 			description:
-				'A recreation of the hit Apple Arcade game “mini motorways” built entirely in python using PyGame.',
-			href: '/projects/mini-motorways',
-			imgSrc: miniMotorwaysImg,
-			imgAlt: 'Splash Screen'
+				'A python-based web app that employs natural language processing to convert speech into LaTeX code.',
+			thumbnailName: 'splatex',
+			color: '#2288FF'
 		}
 	];
 </script>
 
-<div class="wrapper" style="width: {$appDetail.contentWidth}px">
-	<div class="hero">
-		<h1>Creative Technology</h1>
-		<p>
-			From ideating, to designing, prototyping, and developing, these projects reflect my passion
-			for building interactive, useable experiences.
-		</p>
-	</div>
-	<div class="projects">
-		{#each projects as project}
-			<ProjectCard {...project} />
+<div class="flex w-full flex-col items-center gap-24 pb-24 pt-12 md:gap-32 md:pt-0">
+	<IntersectionOberserver>
+		<div in:scale={{ duration: 500 }}>
+			<GradientText text="Projects" twclass="text-4xl whitespace-nowrap" to="#9747FF"
+			></GradientText>
+		</div>
+	</IntersectionOberserver>
+	<div class="grid grid-cols-1 gap-x-[6vw] gap-y-[8vh] md:grid-cols-2">
+		{#each cards as card}
+			<ProjectCard {...card} />
 		{/each}
 	</div>
 </div>
-
-<style lang="scss">
-	.wrapper {
-		display: flex;
-		flex-direction: column;
-		justify-items: space-around;
-	}
-	p {
-		max-width: 500px;
-	}
-
-	.hero {
-		display: flex;
-		flex-direction: column;
-		position: relative;
-		align-items: center;
-		gap: 25px;
-		padding: 120px 0px;
-		text-align: center;
-		h1 {
-			color: #2e2e2e;
-			color: color(display-p3 0.1804 0.1804 0.1804);
-			text-align: center;
-			font-family: Urbanist;
-			font-size: 42px;
-			font-style: normal;
-			font-weight: 800;
-			line-height: normal;
-			letter-spacing: -2px;
-		}
-
-		p {
-			color: #2e2e2e;
-			color: color(display-p3 0.1804 0.1804 0.1804);
-			text-align: center;
-			font-family: Urbanist;
-			font-size: 24px;
-			font-style: normal;
-			font-weight: 300;
-			line-height: normal;
-			letter-spacing: -0.24px;
-			width: 80%;
-			margin: 0;
-		}
-	}
-	.projects {
-		display: grid;
-		grid: 'a a' auto;
-		position: relative;
-		width: 100%;
-		row-gap: 100px;
-		column-gap: 200px;
-		place-content: center;
-		place-items: center;
-
-		z-index: inherit;
-
-		@media screen and (max-width: 966px) {
-			grid: 'a' auto;
-			column-gap: 50px;
-		}
-	}
-</style>
