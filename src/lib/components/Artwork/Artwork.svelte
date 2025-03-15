@@ -1,11 +1,11 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+	import { Spring } from 'svelte/motion';
+	import { scale as scaleTransition } from 'svelte/transition';
 	import { GLASS_CURSOR_SHAPE, GLASS_CURSOR_STYLE } from '$lib/cursor/CursorState.svelte';
 	import HoverEffect from '$lib/cursor/effects/HoverEffect.svelte';
-	import { onMount } from 'svelte';
 	import ArtworkModal from './ArtworkModal.svelte';
-	import { Spring } from 'svelte/motion';
 	import IntersectionOberserver from '../IntersectionObserver/IntersectionOberserver.svelte';
-	import { scale as scaleTransition } from 'svelte/transition';
 
 	let { index } = $props();
 
@@ -26,44 +26,13 @@
 	}
 
 	// Create a single spring with physics parameters tuned for organic motion
-	const hoverSpring = new Spring(0, {
-		stiffness: 0.112, // Lower stiffness for more elasticity
-		damping: 0.2279 // Slight underdamping for subtle bounce
+	let hoverSpring = new Spring(0, {
+		stiffness: 0.312, // Lower stiffness for more elasticity
+		damping: 0.9379 // Slight underdamping for subtle bounce
 	});
 
-	// State to track current spring value
-	let springValue = $state(0);
-
-	// Update spring value on each animation frame
-	function updateSpringValue() {
-		springValue = hoverSpring.current;
-		requestAnimationFrame(updateSpringValue);
-	}
-
-	onMount(() => {
-		// Start animation loop
-		updateSpringValue();
-		return () => {
-			// Clean up if needed
-		};
-	});
-
-	// Derive all animation values from the single spring value
-	function getTranslateY() {
-		return -10 * springValue; // 0 to -10px
-	}
-
-	function getScale() {
-		return 1 + 0.0809 * springValue; // 1 to 1.0809
-	}
-
-	function getShadowBlur() {
-		return 12 + 20 * springValue; // 12px to 32px
-	}
-
-	function getBorderOpacity() {
-		return 0.1618 + 0.4382 * springValue; // 0.1618 to 0.6
-	}
+	let translateY = $derived(-20 * hoverSpring.current);
+	let scale = $derived(1 + hoverSpring.current / 20);
 
 	function onMouseEnter() {
 		hoverSpring.set(1); // Target fully hovered state
@@ -83,7 +52,7 @@
 		onmouseleave={onMouseLeave}
 		role="button"
 		tabindex="0"
-		style:transform="translate3d(0px, {getTranslateY()}px, 0px) scale({getScale()})"
+		style:transform="translate3d(0px, {translateY}px, 0px) scale({scale})"
 	>
 		<IntersectionOberserver>
 			<img
@@ -91,15 +60,9 @@
 				in:scaleTransition={{ duration: 500, start: 0.93 }}
 				alt="Drawing {index}"
 				class="artwork aspect-auto rounded-xl"
-				style:box-shadow="0px {Math.abs(getTranslateY()) + 8}px {getShadowBlur()}px -{Math.floor(
-					getShadowBlur() / 3
-				)}px rgba(0, 0, 0, {0.8 - (getScale() - 1) * 3})"
 			/>
 
-			<div
-				class="border-overlay"
-				style:border-color="rgba(255, 255, 255, {getBorderOpacity()})"
-			></div>
+			<div class="border-overlay" style:border-color="rgba(255, 255, 255, 0.5)"></div>
 		</IntersectionOberserver>
 	</div>
 </HoverEffect>
@@ -112,12 +75,27 @@
 	.artwork-container {
 		position: relative;
 		width: fit-content;
+		perspective: 5.5cm;
 		/* No transition needed, spring handles animation */
 	}
 
 	.artwork {
 		border-radius: 0.75rem;
 		/* No fixed box-shadow, controlled by spring */
+	}
+
+	img {
+		box-shadow:
+			0 2px 3px -1px rgba(0, 0, 0, 0.16),
+			0 5px 10px -4px rgba(0, 0, 0, 0.26);
+		transition: box-shadow 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	}
+
+	img:hover {
+		box-shadow:
+			0 7px 10px -3px rgba(0, 0, 0, 0.26),
+			0 12px 17px -5px rgba(0, 0, 0, 0.21),
+			0 18px 24px -8px rgba(0, 0, 0, 0.11);
 	}
 
 	.border-overlay {
