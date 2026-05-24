@@ -10,8 +10,6 @@
 		bg: string;
 	} = $props();
 
-	
-
 	let iconInfo = (SocialsInfo as any)[platform];
 
 	let path = iconInfo.path;
@@ -28,7 +26,7 @@
 		'mix-blend-mode': 'normal',
 		'border-color': 'none',
 		'backdrop-filter': 'none',
-		'z-index': 9
+		'z-index': 10
 	};
 
 	function onmouseenter() {

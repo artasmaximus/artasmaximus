@@ -1,74 +1,55 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { Spring } from 'svelte/motion';
 	import { scale as scaleTransition } from 'svelte/transition';
 	import { GLASS_CURSOR_SHAPE, GLASS_CURSOR_STYLE } from '$lib/cursor/CursorState.svelte';
 	import HoverEffect from '$lib/cursor/effects/HoverEffect.svelte';
 	import ArtworkModal from './ArtworkModal.svelte';
-	import IntersectionOberserver from '../IntersectionObserver/IntersectionOberserver.svelte';
 
-	let { index } = $props();
+	let { src, alt = 'Artwork' }: { src: string; alt?: string } = $props();
 
 	let isModalOpen = $state(false);
 
-	let src = $state<any>();
-	onMount(async () => {
-		let fileName = `drawing${index}`;
-		src = (await import(`$lib/assets/artwork/${fileName}.jpeg`)).default;
-	});
-
-	function openModal() {
-		isModalOpen = true;
-	}
-
-	function closeModal() {
-		isModalOpen = false;
-	}
-
-	// Create a single spring with physics parameters tuned for organic motion
 	let hoverSpring = new Spring(0, {
-		stiffness: 0.312, // Lower stiffness for more elasticity
-		damping: 0.9379 // Slight underdamping for subtle bounce
+		stiffness: 0.312,
+		damping: 0.9379
 	});
 
 	let translateY = $derived(-20 * hoverSpring.current);
 	let scale = $derived(1 + hoverSpring.current / 20);
 
 	function onMouseEnter() {
-		hoverSpring.set(1); // Target fully hovered state
+		hoverSpring.set(1);
 	}
 
 	function onMouseLeave() {
-		hoverSpring.set(0); // Target non-hovered state
+		hoverSpring.set(0);
 	}
 </script>
 
 <HoverEffect hoverShape={() => GLASS_CURSOR_SHAPE} hoverStyle={GLASS_CURSOR_STYLE}>
 	<div
 		class="artwork-container cursor-none"
-		onkeydown={(e) => e.key === 'Enter' && openModal()}
-		onclick={openModal}
+		onkeydown={(e) => e.key === 'Enter' && (isModalOpen = true)}
+		onclick={() => (isModalOpen = true)}
 		onmouseenter={onMouseEnter}
 		onmouseleave={onMouseLeave}
 		role="button"
 		tabindex="0"
 		style:transform="translate3d(0px, {translateY}px, 0px) scale({scale})"
 	>
-		<IntersectionOberserver>
-			<img
-				{src}
-				in:scaleTransition={{ duration: 500, start: 0.93 }}
-				alt="Drawing {index}"
-				class="artwork aspect-auto rounded-xl"
-			/>
-
-			<div class="border-overlay" style:border-color="rgba(255, 255, 255, 0.5)"></div>
-		</IntersectionOberserver>
+		<img
+			{src}
+			{alt}
+			loading="lazy"
+			in:scaleTransition={{ duration: 500, start: 0.93 }}
+			class="artwork aspect-auto rounded-xl"
+		/>
+		<div class="border-overlay" style:border-color="rgba(255, 255, 255, 0.5)"></div>
 	</div>
 </HoverEffect>
 
 {#if isModalOpen}
-	<ArtworkModal {src} alt="Drawing {index}" onClose={closeModal} />
+	<ArtworkModal {src} {alt} onClose={() => (isModalOpen = false)} />
 {/if}
 
 <style>
@@ -76,12 +57,10 @@
 		position: relative;
 		width: fit-content;
 		perspective: 5.5cm;
-		/* No transition needed, spring handles animation */
 	}
 
 	.artwork {
 		border-radius: 0.75rem;
-		/* No fixed box-shadow, controlled by spring */
 	}
 
 	img {
@@ -101,7 +80,7 @@
 	.border-overlay {
 		position: absolute;
 		inset: 0;
-		border: 2px solid; /* Color controlled via style directive */
+		border: 2px solid;
 		border-radius: 0.75rem;
 		pointer-events: none;
 		mix-blend-mode: overlay;
