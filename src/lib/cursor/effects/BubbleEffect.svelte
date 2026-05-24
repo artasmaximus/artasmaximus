@@ -5,8 +5,6 @@
 		type CursorShapeParams,
 		type CursorStyleParams
 	} from '../CursorState.svelte';
-	import HoverEffect from './HoverEffect.svelte';
-	import LockEffect from './LockEffect.svelte';
 
 	const {
 		children,
@@ -22,28 +20,54 @@
 		twclass?: string;
 	} = $props();
 
-	function getShape(contentRect?: DOMRect): CursorShapeParams {
-		if (contentRect) {
-			return {
-				width: contentRect.width + padding * 2,
-				height: contentRect.height + padding * 2,
-				borderRadius: br
-			};
-		}
-		return DEFAULT_SHAPE;
+	let bubbleEl: HTMLElement;
+
+	function getShape(rect: DOMRect): CursorShapeParams {
+		return {
+			width: rect.width + padding * 2,
+			height: rect.height + padding * 2,
+			borderRadius: br
+		};
 	}
 
-	function getCenter(contentRect?: DOMRect) {
-		if (!contentRect) return { x: 0, y: 0 };
+	function getCenter(rect: DOMRect) {
 		return {
-			x: contentRect.left + contentRect.width / 2,
-			y: contentRect.top + contentRect.height / 2
+			x: rect.left + rect.width / 2,
+			y: rect.top + rect.height / 2
 		};
+	}
+
+	function onmouseenter() {
+		const rect = bubbleEl.getBoundingClientRect();
+		cursorState.isHovering = true;
+		cursorState.isLockedPos = true;
+		cursorState.shape.target = getShape(rect);
+		cursorState.setStyle(cursorStyle);
+		const center = getCenter(rect);
+		cursorState.HoverTargetPos = center;
+		cursorState.setPosition(center);
+	}
+
+	function onmouseleave() {
+		cursorState.isHovering = false;
+		cursorState.isLockedPos = false;
+		cursorState.reset();
 	}
 </script>
 
-<HoverEffect hoverShape={getShape} hoverStyle={cursorStyle} twclass={'w-fit'}>
-	<LockEffect lockPos={getCenter} twclass={twclass ?? ''}>
-		{@render children()}
-	</LockEffect>
-</HoverEffect>
+<div
+	bind:this={bubbleEl}
+	{onmouseenter}
+	{onmouseleave}
+	class="bubbleEffect {twclass ?? ''}"
+	role="complementary"
+>
+	{@render children()}
+</div>
+
+<style>
+	.bubbleEffect {
+		display: block;
+		position: relative;
+	}
+</style>

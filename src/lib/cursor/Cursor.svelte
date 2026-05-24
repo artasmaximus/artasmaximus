@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { cursorState } from './CursorState.svelte';
+	import { cursorState, GOLDEN_RATIO } from './CursorState.svelte';
 
 	const SCALE_FACTOR = 1.2;
 	let isExpanded = false;
@@ -14,8 +14,8 @@
 			const dx = clientX - cursorState.HoverTargetPos.x;
 			const dy = clientY - cursorState.HoverTargetPos.y;
 			cursorState.setPosition({
-				x: cursorState.HoverTargetPos.x + dx * 0.1618,
-				y: cursorState.HoverTargetPos.y + dy * 0.1618
+				x: cursorState.HoverTargetPos.x + dx * GOLDEN_RATIO,
+				y: cursorState.HoverTargetPos.y + dy * GOLDEN_RATIO
 			});
 		}
 	}
@@ -27,29 +27,21 @@
 		});
 	}
 
-	function handleMouseDown(
-		event: MouseEvent,
-		newShape?: { width: number; height: number; borderRadius: number }
-	) {
+	function handleMouseDown(event: MouseEvent) {
 		if (isExpanded) return;
 
-		if (newShape) {
-			cursorState.shape.target = newShape;
-			originalShape = newShape;
-		} else {
-			originalShape = { ...cursorState.shape.target };
-			cursorState.setShape({
-				width: Math.min(
-					cursorState.shape.target.width * SCALE_FACTOR,
-					cursorState.shape.target.width + 10
-				),
-				height: Math.min(
-					cursorState.shape.target.height * SCALE_FACTOR,
-					cursorState.shape.target.height + 10
-				),
-				borderRadius: cursorState.shape.target.borderRadius * SCALE_FACTOR
-			});
-		}
+		originalShape = { ...cursorState.shape.target };
+		cursorState.setShape({
+			width: Math.min(
+				cursorState.shape.target.width * SCALE_FACTOR,
+				cursorState.shape.target.width + 10
+			),
+			height: Math.min(
+				cursorState.shape.target.height * SCALE_FACTOR,
+				cursorState.shape.target.height + 10
+			),
+			borderRadius: cursorState.shape.target.borderRadius * SCALE_FACTOR
+		});
 		isExpanded = true;
 	}
 

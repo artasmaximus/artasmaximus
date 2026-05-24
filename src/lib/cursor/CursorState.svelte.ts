@@ -1,5 +1,7 @@
 import { Spring } from 'svelte/motion';
 
+export const GOLDEN_RATIO = 0.1618;
+
 let POSITION_STIFFNESS = 0.7;
 let POSITION_DAMPING = 0.8;
 let POSITION_PRECISION = 0.01;
@@ -101,30 +103,6 @@ class CursorState {
 		this.style = DEFAULT_STYLE;
 		this.isLockedPos = false;
 		this.isHovering = false;
-	}
-
-	getPosition() {
-		return {
-			x: this.position.current.x,
-			y: this.position.current.y
-		};
-	}
-
-	getShape() {
-		return {
-			width: this.shape.current.width,
-			height: this.shape.current.height,
-			borderRadius: this.shape.current.borderRadius
-		};
-	}
-
-	getStyle() {
-		return {
-			background: this.style['background'],
-			'mix-blend-mode': this.style['mix-blend-mode'],
-			'border-color': this.style['border-color'],
-			'backdrop-filter': this.style['backdrop-filter']
-		};
 	}
 
 	getCenter() {

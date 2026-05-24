@@ -29,7 +29,6 @@
 		borderRadius: 40
 	});
 
-	let pos = $derived(cursorState.getPosition());
 </script>
 
 <HoverEffect {hoverShape} hoverStyle={{ ...DEFAULT_STYLE, background: 'none' }}>
@@ -39,8 +38,7 @@
 			src={solidsrc}
 			alt="{suit} Solid"
 			class="absolute inset-0 aspect-square h-fit w-fit"
-			style="mask: radial-gradient(circle at {cursorState.getPosition()
-				.x}px {cursorState.getPosition().y}px, black 0%, transparent 40px)"
+			style="mask: radial-gradient(circle at {cursorState.position.current.x}px {cursorState.position.current.y}px, black 0%, transparent 40px)"
 		/>
 	</div>
 </HoverEffect>

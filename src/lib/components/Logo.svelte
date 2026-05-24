@@ -35,7 +35,7 @@
 				y: top + height
 			};
 		}
-		return cursorState.getPosition();
+		return { x: cursorState.position.current.x, y: cursorState.position.current.y };
 	}
 
 	const onclick = cursorState.reset;

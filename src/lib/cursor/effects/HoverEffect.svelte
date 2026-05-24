@@ -22,18 +22,13 @@
 	let hoverEffect: HTMLElement;
 	let contentRect = $state<DOMRect>();
 
-	$effect(() => {
-		if (hoverEffect) {
-			contentRect = hoverEffect.getBoundingClientRect();
-		}
-	});
-
 	function onmouseleave() {
 		cursorState.isHovering = false;
 		cursorState.reset();
 	}
 
 	function onmouseenter() {
+		contentRect = hoverEffect.getBoundingClientRect();
 		cursorState.isHovering = true;
 		cursorState.shape.target = hoverShape(contentRect);
 		cursorState.setStyle(hoverStyle);

@@ -30,8 +30,8 @@
 	<BubbleEffect padding={4} br={10} cursorStyle={DEFAULT_STYLE}>
 		<button
 			class="atSignButton"
-			onclick={() => (open = !open)}
 			aria-label={open ? 'Hide social links' : 'Show social links'}
+			onclick={() => (open = !open)}
 		>
 			<AtSign />
 		</button>
