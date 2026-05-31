@@ -1,11 +1,9 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { animate, inView } from 'motion';
 	import Artwork from '$lib/components/Artwork/Artwork.svelte';
 	import GradientText from '$lib/components/GradientText.svelte';
 	import Section from '$lib/layout/Section.svelte';
 
-	// Vite bundles all artwork images at build time — no runtime async imports
+	// Vite bundles all images at build time — no per-card runtime async imports
 	const rawModules = import.meta.glob('/src/lib/assets/artwork/drawing*.jpeg', {
 		eager: true,
 		import: 'default'
@@ -17,27 +15,6 @@
 			return n(a) - n(b);
 		})
 		.map(([, src]) => src as string);
-
-	onMount(() => {
-		const cards = document.querySelectorAll<HTMLElement>('.artwork-card');
-
-		// Set invisible before first paint so there's no flash
-		animate(cards, { opacity: 0, y: 24 }, { duration: 0 });
-
-		cards.forEach((card, i) => {
-			inView(
-				card,
-				() => {
-					animate(card, { opacity: 1, y: 0 }, {
-						delay: Math.min(i * 0.045, 0.35),
-						duration: 0.55,
-						ease: [0.22, 1, 0.36, 1]
-					});
-				},
-				{ amount: 0.12 }
-			);
-		});
-	});
 </script>
 
 <Section>

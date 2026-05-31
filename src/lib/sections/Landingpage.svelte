@@ -115,7 +115,7 @@
 			in:fly={{ y: 20, duration: 400, delay: 750 }}
 		>
 			<p
-				class="m-0 w-3/4 pt-10 text-center text-base font-normal leading-relaxed text-stone-600 md:w-3/4 md:text-xl lg:text-xl xl:w-1/2"
+				class="m-0 mt-20 w-3/4 pt-10 text-center text-base font-normal leading-relaxed text-stone-600 md:w-3/4 md:text-xl lg:text-xl xl:w-1/2"
 			>
 				Through ideation, research, design, development, and iteration, I strive to create user
 				experiences that are both functional and engagingly beautiful.

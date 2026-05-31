@@ -4,10 +4,14 @@
 	import { GLASS_CURSOR_SHAPE, GLASS_CURSOR_STYLE } from '$lib/cursor/CursorState.svelte';
 	import HoverEffect from '$lib/cursor/effects/HoverEffect.svelte';
 	import ArtworkModal from './ArtworkModal.svelte';
+	import IntersectionOberserver from '../IntersectionObserver/IntersectionOberserver.svelte';
 
 	let { src, alt = 'Artwork' }: { src: string; alt?: string } = $props();
 
 	let isModalOpen = $state(false);
+
+	function openModal() { isModalOpen = true; }
+	function closeModal() { isModalOpen = false; }
 
 	let hoverSpring = new Spring(0, {
 		stiffness: 0.312,
@@ -17,39 +21,36 @@
 	let translateY = $derived(-20 * hoverSpring.current);
 	let scale = $derived(1 + hoverSpring.current / 20);
 
-	function onMouseEnter() {
-		hoverSpring.set(1);
-	}
-
-	function onMouseLeave() {
-		hoverSpring.set(0);
-	}
+	function onMouseEnter() { hoverSpring.set(1); }
+	function onMouseLeave() { hoverSpring.set(0); }
 </script>
 
 <HoverEffect hoverShape={() => GLASS_CURSOR_SHAPE} hoverStyle={GLASS_CURSOR_STYLE}>
 	<div
 		class="artwork-container cursor-none"
-		onkeydown={(e) => e.key === 'Enter' && (isModalOpen = true)}
-		onclick={() => (isModalOpen = true)}
+		onkeydown={(e) => e.key === 'Enter' && openModal()}
+		onclick={openModal}
 		onmouseenter={onMouseEnter}
 		onmouseleave={onMouseLeave}
 		role="button"
 		tabindex="0"
 		style:transform="translate3d(0px, {translateY}px, 0px) scale({scale})"
 	>
-		<img
-			{src}
-			{alt}
-			loading="lazy"
-			in:scaleTransition={{ duration: 500, start: 0.93 }}
-			class="artwork aspect-auto rounded-xl"
-		/>
-		<div class="border-overlay" style:border-color="rgba(255, 255, 255, 0.5)"></div>
+		<IntersectionOberserver>
+			<img
+				{src}
+				{alt}
+				loading="lazy"
+				in:scaleTransition={{ duration: 500, start: 0.93 }}
+				class="artwork aspect-auto rounded-xl"
+			/>
+			<div class="border-overlay" style:border-color="rgba(255, 255, 255, 0.5)"></div>
+		</IntersectionOberserver>
 	</div>
 </HoverEffect>
 
 {#if isModalOpen}
-	<ArtworkModal {src} {alt} onClose={() => (isModalOpen = false)} />
+	<ArtworkModal {src} {alt} onClose={closeModal} />
 {/if}
 
 <style>

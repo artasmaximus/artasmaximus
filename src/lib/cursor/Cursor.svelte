@@ -96,8 +96,6 @@
 		pointer-events: none;
 		z-index: 1000;
 		will-change: transform;
-		transition:
-			border-radius 0.1s cubic-bezier(0.19, 1, 0.22, 1),
-			background 0.05s ease-out;
+		transition: background 0.05s ease-out;
 	}
 </style>
