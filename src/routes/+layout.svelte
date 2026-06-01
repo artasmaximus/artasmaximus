@@ -16,7 +16,7 @@
 	{#if !isTouchscreen}
 		<Cursor />
 	{/if}
-	<Background dotRadius={35} />
+	<Background dotRadius={25} />
 	<Header />
 	{@render children()}
 </div>

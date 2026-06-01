@@ -1,6 +1,6 @@
 // Background.svelte.ts
-export const DEFAULT_PRIMARY = '#E0E0E0';
-export const DEFAULT_BLINK = '#6B6B6B';
+export const DEFAULT_PRIMARY = '#E8E8E8';
+export const DEFAULT_BLINK = '#C8C8C8';
 
 export class Color {
 	primary: string = $state(DEFAULT_PRIMARY);

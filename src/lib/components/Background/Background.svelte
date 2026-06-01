@@ -27,6 +27,12 @@
 		uniform vec3  u_primary;     // #E0E0E0
 		uniform vec3  u_blink;       // #6B6B6B
 
+		// Ring buffer of recent clicks. xy = physical px (gl_FragCoord space),
+		// z = the u_time value (seconds) at which the click happened.
+		#define CLICK_COUNT 8
+		uniform vec3 u_clicks[CLICK_COUNT];
+		uniform vec3 u_clickColors[CLICK_COUNT];   // per-click ripple tint
+
 		// ---- hash / noise ------------------------------------------------
 		// Classic 2D hash — maps a grid cell coordinate to a stable [0,1) value.
 		float hash(vec2 p) {
@@ -68,8 +74,40 @@
 			float fall = 1.0 - smoothstep(ramp + hold, ramp + hold + ramp, ts);
 			float blinkAmt = rise * fall * doesBlink;
 
+			// ---- click ripple ------------------------------------------------
+			// An expanding, soft ring radiates from each recent click. As the
+			// wavefront sweeps over a dot it lights up; it darkens again once
+			// the ring has moved past, so the cascade trails away behind it.
+			vec2 cellCenter = cell * u_spacing + center;
+
+			// Derived from spacing so the look is identical at any dpr / density.
+			float waveSpeed = u_spacing * 17.0;   // physical px/s the ring expands
+			float waveBand  = u_spacing * 3.0;    // ring thickness — wide = blurred
+			float waveLife  = 2.0;                // seconds for a ripple to die out
+
+			float rippleAmt = 0.0;
+			vec3 rippleColor = u_blink;
+			for (int i = 0; i < CLICK_COUNT; i++) {
+				vec3 click = u_clicks[i];
+				float dt = u_time - click.z;
+				if (dt < 0.0) continue;                       // not happened yet
+				float cd = length(cellCenter - click.xy);
+				float waveRadius = dt * waveSpeed;
+				float ring = exp(-pow((cd - waveRadius) / waveBand, 2.0));
+				float life = 1.0 - smoothstep(0.0, waveLife, dt);
+				float amt = ring * life;
+				// Keep the colour of whichever ripple is strongest here.
+				if (amt > rippleAmt) {
+					rippleAmt = amt;
+					rippleColor = u_clickColors[i];
+				}
+			}
+
 			// ---- dot colour --------------------------------------------------
+			// Ambient blink toward u_blink, then the click ripple paints its
+			// own random tint on top wherever a wavefront is passing.
 			vec3 dotColor = mix(u_primary, u_blink, blinkAmt);
+			dotColor = mix(dotColor, rippleColor, rippleAmt);
 
 			// ---- SDF circle (anti-aliased with smoothstep) -------------------
 			float dist      = length(cellPos - center);
@@ -150,8 +188,51 @@
 		const uBg = gl.getUniformLocation(program, 'u_bg');
 		const uPrimary = gl.getUniformLocation(program, 'u_primary');
 		const uBlink = gl.getUniformLocation(program, 'u_blink');
+		const uClicks = gl.getUniformLocation(program, 'u_clicks[0]');
+		const uClickColors = gl.getUniformLocation(program, 'u_clickColors[0]');
 
 		gl.uniform3fv(uBg, hexToVec3(BG_COLOR));
+
+		// ---- click ripples -----------------------------------------------
+		// Ring buffer of the 8 most recent clicks. Each is [x, y, time].
+		// Times start far in the past so no ripple shows until a real click.
+		const CLICK_COUNT = 8;
+		const clicks = new Float32Array(CLICK_COUNT * 3);
+		for (let i = 0; i < CLICK_COUNT; i++) clicks[i * 3 + 2] = -1000;
+		const clickColors = new Float32Array(CLICK_COUNT * 3);
+		let clickIndex = 0;
+		gl.uniform3fv(uClicks, clicks);
+		gl.uniform3fv(uClickColors, clickColors);
+
+		// Accent palette pulled from the site's gradients (landing text + the
+		// Projects / Artwork / Resume cards). Each click picks one at random.
+		const RIPPLE_COLORS = [
+			'#9747FF', // purple — Frontend Developer / Projects
+			'#56D82E', // green  — UX Designer
+			'#FF4992', // pink   — Collaborator
+			'#FFA21F', // orange — + Friend ;)
+			'#48C8FF', // cyan   — Artwork
+			'#FF48CE' //  magenta — Resume
+		];
+
+		function onPointerDown(e: PointerEvent) {
+			const dpr = window.devicePixelRatio || 1;
+			const base = clickIndex * 3;
+			clicks[base] = e.clientX * dpr;
+			// Flip Y: gl_FragCoord's origin is bottom-left, the mouse is top-left.
+			clicks[base + 1] = (window.innerHeight - e.clientY) * dpr;
+			clicks[base + 2] = nowSec;
+
+			const [r, g, b] = hexToVec3(RIPPLE_COLORS[Math.floor(Math.random() * RIPPLE_COLORS.length)]);
+			clickColors[base] = r;
+			clickColors[base + 1] = g;
+			clickColors[base + 2] = b;
+
+			clickIndex = (clickIndex + 1) % CLICK_COUNT;
+			gl!.uniform3fv(uClicks, clicks);
+			gl!.uniform3fv(uClickColors, clickColors);
+		}
+		window.addEventListener('pointerdown', onPointerDown);
 
 		// ---- resize ------------------------------------------------------
 		function resize() {
@@ -175,8 +256,10 @@
 
 		// ---- RAF loop ----------------------------------------------------
 		let rafId = 0;
+		let nowSec = 0;
 		function render(ms: number) {
-			gl!.uniform1f(uTime, ms * 0.001);
+			nowSec = ms * 0.001;
+			gl!.uniform1f(uTime, nowSec);
 			gl!.drawArrays(gl!.TRIANGLES, 0, 6);
 			rafId = requestAnimationFrame(render);
 		}
@@ -185,6 +268,7 @@
 		return () => {
 			cancelAnimationFrame(rafId);
 			window.removeEventListener('resize', resize);
+			window.removeEventListener('pointerdown', onPointerDown);
 			stopEffect();
 		};
 	});
@@ -193,10 +277,7 @@
 {#if webglFailed}
 	<div class="bg-fallback fixed left-0 top-0 -z-10 h-screen w-screen"></div>
 {:else}
-	<canvas
-		bind:this={canvas}
-		class="fixed left-0 top-0 -z-10"
-		style="width: 100vw; height: 100vh;"
+	<canvas bind:this={canvas} class="fixed left-0 top-0 -z-10" style="width: 100vw; height: 100vh;"
 	></canvas>
 {/if}
 
