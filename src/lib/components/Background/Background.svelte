@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { bgDotColor } from './Background.svelte.ts';
+	import { bgDotColor, rippleTint } from './Background.svelte.ts';
 
 	const { dotRadius = 35 } = $props();
 
@@ -111,7 +111,7 @@
 
 			// ---- SDF circle (anti-aliased with smoothstep) -------------------
 			float dist      = length(cellPos - center);
-			float dotRadius = 1.0;    // 1 px radius = 2 px diameter dot
+			float dotRadius = 1.5;    // 1 px radius = 2 px diameter dot
 			float aa        = 0.8;    // sub-pixel anti-aliasing width
 			float alpha     = 1.0 - smoothstep(dotRadius - aa, dotRadius + aa, dist);
 
@@ -223,7 +223,9 @@
 			clicks[base + 1] = (window.innerHeight - e.clientY) * dpr;
 			clicks[base + 2] = nowSec;
 
-			const [r, g, b] = hexToVec3(RIPPLE_COLORS[Math.floor(Math.random() * RIPPLE_COLORS.length)]);
+			const [r, g, b] = hexToVec3(
+				rippleTint.color ?? RIPPLE_COLORS[Math.floor(Math.random() * RIPPLE_COLORS.length)]
+			);
 			clickColors[base] = r;
 			clickColors[base + 1] = g;
 			clickColors[base + 2] = b;

@@ -31,6 +31,14 @@
 			href: '/Projects/boomfit'
 		},
 		{
+			title: 'Slime Simulation',
+			description:
+				'A Unity simulation where thousands of agents, each following three simple rules, produce branching colonies and trail networks with no central blueprint.',
+			thumbnailName: 'slimesimulation',
+			color: '#00A661',
+			href: '/Projects/slimesimulation'
+		},
+		{
 			title: 'Content Wrangling',
 			description:
 				'A case study on information architecture and design principles, realized through the creation of a microsite.',

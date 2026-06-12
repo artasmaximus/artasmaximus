@@ -6,6 +6,30 @@
 	let isExpanded = false;
 	let originalShape: { width: number; height: number; borderRadius: number } | null = null;
 	let rafId: number;
+	let stretchRafId: number;
+
+	// Velocity squash & stretch: the dot elongates along its direction of travel
+	// and settles when it stops. Suppressed while morphed (ring/bubble/pill) so
+	// non-circular shapes never visibly rotate.
+	let stretch = $state({ angle: 0, amount: 0 });
+	let prevPos = { x: 0, y: 0 };
+
+	function stretchLoop() {
+		const { x, y } = cursorState.position.current;
+		const vx = x - prevPos.x;
+		const vy = y - prevPos.y;
+		prevPos = { x, y };
+
+		const speed = Math.hypot(vx, vy);
+		const morphed = cursorState.isHovering || cursorState.isLockedPos;
+		const target = morphed ? 0 : Math.min(speed * 0.009, 0.22);
+		const ease = morphed ? 0.5 : 0.18;
+
+		stretch.amount += (target - stretch.amount) * ease;
+		if (speed > 2 && !morphed) stretch.angle = Math.atan2(vy, vx);
+
+		stretchRafId = requestAnimationFrame(stretchLoop);
+	}
 
 	function updateCursorPosition(clientX: number, clientY: number) {
 		if (!cursorState.isLockedPos) {
@@ -63,6 +87,7 @@
 			window.addEventListener('pointermove', handleMouseMove, { passive: true });
 			window.addEventListener('pointerdown', handleMouseDown);
 			window.addEventListener('pointerup', handleMouseUp);
+			stretchRafId = requestAnimationFrame(stretchLoop);
 		}
 	});
 
@@ -72,6 +97,7 @@
 			window.removeEventListener('pointerdown', handleMouseDown);
 			window.removeEventListener('pointerup', handleMouseUp);
 			cancelAnimationFrame(rafId);
+			cancelAnimationFrame(stretchRafId);
 		}
 	});
 </script>
@@ -79,13 +105,16 @@
 <span
 	id="custom-cursor"
 	style="transform: translate3d({cursorState.position.current.x}px, {cursorState.position.current
-		.y}px, 0) translate3d(-50%, -50%, 0);
-			width: {cursorState.shape.current.width}px; 
+		.y}px, 0) translate3d(-50%, -50%, 0){stretch.amount > 0.004
+		? ` rotate(${stretch.angle}rad) scale(${1 + stretch.amount}, ${1 / (1 + stretch.amount)})`
+		: ''};
+			width: {cursorState.shape.current.width}px;
 			height: {cursorState.shape.current.height}px;
 			border-radius: {cursorState.shape.current.borderRadius}px;
 			background: {cursorState.style['background']};
 			mix-blend-mode: {cursorState.style['mix-blend-mode']};
 			border-color: {cursorState.style['border-color']};
+			border-width: {cursorState.style['border-width'] ?? '0px'};
 			backdrop-filter: {cursorState.style['backdrop-filter']};
 			z-index: {cursorState.style['z-index']}"
 ></span>
@@ -96,6 +125,9 @@
 		pointer-events: none;
 		z-index: 1000;
 		will-change: transform;
-		transition: background 0.05s ease-out;
+		border-style: solid;
+		transition:
+			background 0.05s ease-out,
+			border-color 0.1s ease-out;
 	}
 </style>

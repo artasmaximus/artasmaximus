@@ -19,9 +19,9 @@
 	}
 </script>
 
-<div use:inview={options} oninview_change={handleChange} class={className}>
+<div use:inview={options} oninview_change={handleChange} class={`h-full ${className}`}>
 	{#if isInView}
-		<div in:fly={{ y: 50, duration: 400, delay: 100 }} out:fade={{ duration: 200 }}>
+		<div class="h-full" in:fly={{ y: 50, duration: 400, delay: 100 }} out:fade={{ duration: 200 }}>
 			{@render children()}
 		</div>
 	{/if}

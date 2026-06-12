@@ -7,13 +7,15 @@ let POSITION_DAMPING = 0.8;
 let POSITION_PRECISION = 0.01;
 
 let SIZE_STIFFNESS = 0.2;
-let SIZE_DAMPING = 0.7;
+// Slightly underdamped so shape changes (dot -> ring, bubble swallow) land with a subtle bounce.
+let SIZE_DAMPING = 0.6;
 
 export const DEFAULT_SHAPE = { width: 16, height: 16, borderRadius: 8 };
 export const DEFAULT_STYLE: CursorStyleParams = {
 	background: 'white',
 	'mix-blend-mode': 'difference',
 	'border-color': 'transparent',
+	'border-width': '0px',
 	'backdrop-filter': 'none',
 	'z-index': 9999
 };
@@ -46,8 +48,27 @@ export interface CursorStyleParams {
 	background: string;
 	'mix-blend-mode': string;
 	'border-color': string;
+	'border-width'?: string;
 	'backdrop-filter': string;
 	'z-index'?: number;
+}
+
+// The "clickable" state: the solid dot opens into a hollow ring tinted by the
+// hovered element's accent. Filled = inert surface, hollow = this opens.
+export function ringCursor(
+	accent: string,
+	size = 32
+): { shape: CursorShapeParams; style: CursorStyleParams } {
+	return {
+		shape: { width: size, height: size, borderRadius: size / 2 },
+		style: {
+			background: 'transparent',
+			'mix-blend-mode': 'normal',
+			'border-color': accent,
+			'border-width': '1.5px',
+			'backdrop-filter': 'none'
+		}
+	};
 }
 
 export function textCursor(

@@ -1,35 +1,55 @@
 <script lang="ts">
 	import { Spring } from 'svelte/motion';
 	import { scale as scaleTransition } from 'svelte/transition';
-	import { GLASS_CURSOR_SHAPE, GLASS_CURSOR_STYLE } from '$lib/cursor/CursorState.svelte';
-	import HoverEffect from '$lib/cursor/effects/HoverEffect.svelte';
-	import ArtworkModal from './ArtworkModal.svelte';
+	import RingEffect from '$lib/cursor/effects/RingEffect.svelte';
 	import IntersectionOberserver from '../IntersectionObserver/IntersectionOberserver.svelte';
+	import { rippleTint } from '../Background/Background.svelte.ts';
+	import { dominantColor } from '$lib/utils/dominantColor';
 
-	let { src, alt = 'Artwork' }: { src: string; alt?: string } = $props();
+	let {
+		src,
+		alt = 'Artwork',
+		onOpen
+	}: {
+		src: string;
+		alt?: string;
+		onOpen?: (detail: { src: string; alt: string; accent: string }) => void;
+	} = $props();
 
-	let isModalOpen = $state(false);
+	let accent = $state('#78716C');
 
-	function openModal() { isModalOpen = true; }
-	function closeModal() { isModalOpen = false; }
+	function handleLoad(e: Event) {
+		const color = dominantColor(e.currentTarget as HTMLImageElement);
+		if (color) accent = color;
+	}
 
 	let hoverSpring = new Spring(0, {
 		stiffness: 0.312,
 		damping: 0.9379
 	});
 
-	let translateY = $derived(-20 * hoverSpring.current);
-	let scale = $derived(1 + hoverSpring.current / 20);
+	let translateY = $derived(-10 * hoverSpring.current);
+	let scale = $derived(1 + hoverSpring.current / 40);
 
-	function onMouseEnter() { hoverSpring.set(1); }
-	function onMouseLeave() { hoverSpring.set(0); }
+	function onMouseEnter() {
+		hoverSpring.set(1);
+		rippleTint.color = accent;
+	}
+	function onMouseLeave() {
+		hoverSpring.set(0);
+		rippleTint.color = null;
+	}
+
+	function open() {
+		onOpen?.({ src, alt, accent });
+	}
 </script>
 
-<HoverEffect hoverShape={() => GLASS_CURSOR_SHAPE} hoverStyle={GLASS_CURSOR_STYLE}>
+<RingEffect {accent}>
 	<div
 		class="artwork-container cursor-none"
-		onkeydown={(e) => e.key === 'Enter' && openModal()}
-		onclick={openModal}
+		onkeydown={(e) => e.key === 'Enter' && open()}
+		onclick={open}
 		onmouseenter={onMouseEnter}
 		onmouseleave={onMouseLeave}
 		role="button"
@@ -41,23 +61,19 @@
 				{src}
 				{alt}
 				loading="lazy"
+				onload={handleLoad}
 				in:scaleTransition={{ duration: 500, start: 0.93 }}
 				class="artwork aspect-auto rounded-xl"
 			/>
 			<div class="border-overlay" style:border-color="rgba(255, 255, 255, 0.5)"></div>
 		</IntersectionOberserver>
 	</div>
-</HoverEffect>
-
-{#if isModalOpen}
-	<ArtworkModal {src} {alt} onClose={closeModal} />
-{/if}
+</RingEffect>
 
 <style>
 	.artwork-container {
 		position: relative;
 		width: fit-content;
-		perspective: 5.5cm;
 	}
 
 	.artwork {

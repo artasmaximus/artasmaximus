@@ -1,6 +1,8 @@
 // Background.svelte.ts
 export const DEFAULT_PRIMARY = '#E8E8E8';
-export const DEFAULT_BLINK = '#C8C8C8';
+// export const DEFAULT_PRIMARY = '#E8E8E8';
+export const DEFAULT_BLINK = '#1E1E1E';
+// export const DEFAULT_BLINK = '#C8C8C8';
 
 export class Color {
 	primary: string = $state(DEFAULT_PRIMARY);
@@ -21,3 +23,11 @@ export class Color {
 }
 
 export const bgDotColor = new Color();
+
+// When set, click ripples use this color instead of a random accent — e.g. the
+// Artwork page tints ripples with the hovered piece's dominant color.
+export class RippleTint {
+	color: string | null = $state(null);
+}
+
+export const rippleTint = new RippleTint();

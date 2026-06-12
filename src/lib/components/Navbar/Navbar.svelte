@@ -3,12 +3,20 @@
 	import Socials from '../Socials.svelte';
 	import Button from '../Button/Button.svelte';
 	import MobileMenu from './MobileMenu.svelte';
+	import { navTheme } from './NavbarState.svelte';
 
 	let nav = $state<HTMLElement>();
+	let navHeight = $state(0);
+
+	$effect(() => {
+		navTheme.height = navHeight;
+	});
 </script>
 
 <nav
 	bind:this={nav}
+	bind:clientHeight={navHeight}
+	class:dark={navTheme.dark}
 	class="sticky left-0 top-0 z-10 flex w-full items-center justify-between bg-none px-[6vw] py-[4vw]"
 >
 	<div class="gradient-blur pointer-events-none absolute left-0 top-0 h-full w-full">
@@ -49,3 +57,31 @@
 		</div>
 	</div>
 </nav>
+
+<style>
+	nav {
+		transition: color 0.4s ease;
+	}
+
+	nav :global(button),
+	nav :global(.atSignButton svg path),
+	nav :global(.icon-container svg path) {
+		transition: color 0.4s ease, fill 0.4s ease;
+	}
+
+	/* Logo text and the mobile menu icon use inherited/currentColor, so they
+	   follow this automatically. Button text and the social icon SVGs set
+	   their own color/fill and need explicit overrides. */
+	nav.dark {
+		color: #fafafa;
+	}
+
+	nav.dark :global(button) {
+		color: #fafafa !important;
+	}
+
+	nav.dark :global(.atSignButton svg path),
+	nav.dark :global(.icon-container svg path) {
+		fill: #fafafa !important;
+	}
+</style>
