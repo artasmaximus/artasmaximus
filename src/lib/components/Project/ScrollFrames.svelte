@@ -111,10 +111,10 @@
 		reduceMotion = prefersReducedMotion();
 		if (reduceMotion) target = count - 1;
 
-		// The full sequence is heavy, so small screens and data savers get a quarter of it.
+		// The full sequence is heavy, so small screens and data savers get half of it.
 		const connection = (navigator as Navigator & { connection?: { saveData?: boolean } })
 			.connection;
-		const finest = window.innerWidth < 768 || connection?.saveData ? 4 : 1;
+		const finest = window.innerWidth < 768 || connection?.saveData ? 2 : 1;
 		const order = reduceMotion ? [count - 1] : loadOrder(finest);
 
 		let stopped = false;

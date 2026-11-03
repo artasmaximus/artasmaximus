@@ -6,14 +6,16 @@
 
 	const project = getProject('slimesimulation');
 
-	const frame = (index: number) => `/slime-frames/frame_${String(index + 1).padStart(4, '0')}.webp`;
+	// Keeps the numbering of the original 240-frame render, of which every second frame shipped.
+	const frame = (index: number) =>
+		`/slime-frames/frame_${String(index * 2 + 1).padStart(4, '0')}.webp`;
 </script>
 
 <ProjectPage {project} dark>
 	<ScrollFrames
 		{frame}
 		darkAbove
-		count={240}
+		count={120}
 		width={1920}
 		height={1080}
 		alt="A solid disc of agents breaking apart into a glowing, branching network"
