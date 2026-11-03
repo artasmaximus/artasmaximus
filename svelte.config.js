@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-vercel';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -8,9 +8,9 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-		// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
-		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
-		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
+		// The Vercel runtime comes from the build's Node version, so it follows the
+		// Node.js Version in Vercel's project settings. This adapter accepts 20, 22, or 24.
+		// Pinned to 6.3.0 because 6.3.1 and later crash on SvelteKit 2.13.
 		adapter: adapter()
 	}
 };
