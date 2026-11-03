@@ -1,6 +1,6 @@
-import minimotorwaysCover from '$lib/assets/minimotorways/rules.jpg';
 import arcdCover from '$lib/assets/thumbnails/arcd.jpg';
 import boomfitCover from '$lib/assets/thumbnails/boomfit.jpg';
+import minimotorwaysCover from '$lib/assets/thumbnails/minimotorways.svg';
 import slimeCover from '$lib/assets/thumbnails/slime.jpg';
 
 export interface Project {
@@ -81,7 +81,7 @@ const all: Project[] = [
 		context: 'University term project',
 		links: [{ label: 'Video', href: 'https://www.youtube.com/watch?v=GaAHKJQ6lcY' }],
 		cover: minimotorwaysCover,
-		coverAlt: 'The rules screen of the Mini Motorways recreation',
+		coverAlt: 'A mosaic of tiles showing roads, houses, and malls from the Mini Motorways recreation',
 		accent: '#8A6B1F'
 	}
 ];
