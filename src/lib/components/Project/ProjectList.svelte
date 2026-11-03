@@ -28,9 +28,6 @@
 					<div class="flex flex-col gap-2 md:col-span-4">
 						<h2 class="text-heading text-ink">{project.name}</h2>
 						<p class="text-body text-ink-muted">{project.summary}</p>
-						<p class="pt-1 text-small tabular-nums text-ink-subtle">
-							{[project.year, project.stack].filter(Boolean).join(' · ')}
-						</p>
 					</div>
 				</a>
 			</Reveal>

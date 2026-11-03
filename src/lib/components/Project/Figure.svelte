@@ -4,18 +4,16 @@
 	let {
 		src,
 		alt,
-		caption,
 		mat = false
 	}: {
 		src: string;
 		alt: string;
-		caption?: string;
 		/* Hangs a smaller or white-ground image centered on a white mat. */
 		mat?: boolean;
 	} = $props();
 </script>
 
-<figure class="flex flex-col gap-3">
+<figure>
 	<GlassEffect>
 		<div
 			class="overflow-hidden rounded-lg border border-line bg-surface {mat
@@ -31,7 +29,4 @@
 			/>
 		</div>
 	</GlassEffect>
-	{#if caption}
-		<figcaption class="text-small text-ink-subtle">{caption}</figcaption>
-	{/if}
 </figure>

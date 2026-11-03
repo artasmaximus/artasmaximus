@@ -25,8 +25,8 @@
 			</header>
 		</Reveal>
 
-		<section aria-labelledby="work" class="flex flex-col gap-8">
-			<h2 id="work" class="border-t border-line pt-6 text-label text-ink-subtle">Selected work</h2>
+		<section aria-labelledby="work">
+			<h2 id="work" class="sr-only">Selected work</h2>
 			<ProjectList />
 		</section>
 

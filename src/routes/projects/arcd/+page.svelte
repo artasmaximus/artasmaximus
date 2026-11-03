@@ -38,23 +38,16 @@
 	{/snippet}
 
 	<ProjectSection
-		index={1}
 		title="The brief"
 		text={[
 			"ARCD began in 2021, inspired by my family's love for card games, a tradition that has always been part of our gatherings.",
 			'I wanted a deck that worked in play and also held up as modern design, with an emphasis on harmony and symmetry.'
 		]}
 	>
-		<Figure
-			mat
-			src={origins}
-			alt="Early sketches and iterations of the ARCD suit symbols"
-			caption="Early sketches and iterations of the suit symbols."
-		/>
+		<Figure mat src={origins} alt="Early sketches and iterations of the ARCD suit symbols" />
 	</ProjectSection>
 
 	<ProjectSection
-		index={2}
 		title="Approach"
 		text={[
 			'After several iterations, I finalized four suit symbols, each constructed using only rectangles and circular arcs so they read as one system.'
@@ -64,28 +57,20 @@
 			mat
 			src={symbols}
 			alt="The four finalized suit symbols built from rectangles and circular arcs"
-			caption="The four suits, in gradient and solid variants."
 		/>
 	</ProjectSection>
 
 	<ProjectSection
-		index={3}
 		title="Key decisions"
 		text={[
 			'Every symbol has an inner and outer stroke with opposing color gradients, plus a solid variant that stays legible at the small size of the card corners.',
 			'Pairing vibrant color with simple shapes keeps the deck expressive, while drawing from both traditional card motifs and contemporary design.'
 		]}
 	>
-		<Figure
-			mat
-			src={dap}
-			alt="Color and geometry studies for the deck"
-			caption="Color and geometry studies."
-		/>
+		<Figure mat src={dap} alt="Color and geometry studies for the deck" />
 	</ProjectSection>
 
 	<ProjectSection
-		index={4}
 		title="Outcome"
 		text={['The full deck lives in Figma: every suit, court card, and color token.']}
 	>
