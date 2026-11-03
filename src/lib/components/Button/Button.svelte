@@ -1,11 +1,18 @@
 <script lang="ts">
 	import BubbleEffect from '$lib/cursor/effects/BubbleEffect.svelte';
-	import { cursorState, type CursorStyleParams } from '$lib/cursor/CursorState.svelte';
+	import {
+		cursorState,
+		DEFAULT_STYLE,
+		type CursorStyleParams
+	} from '$lib/cursor/CursorState.svelte';
 	import { INK } from '$lib/theme';
 	import { Spring } from 'svelte/motion';
 
 	let {
 		tint = INK,
+		fill,
+		fillText,
+		blend = false,
 		href,
 		download,
 		external = false,
@@ -17,6 +24,11 @@
 	}: {
 		/* Fill of the cursor bubble on hover. The label stays ink at rest. */
 		tint?: string;
+		/* Solid resting background, for buttons that sit on top of imagery. */
+		fill?: string;
+		fillText?: string;
+		/* The cursor still swallows the button, but keeps its own style and blends over the fill. */
+		blend?: boolean;
 		/* Renders a link when set, a button otherwise. */
 		href?: string;
 		download?: string;
@@ -28,13 +40,17 @@
 		children: () => any;
 	} = $props();
 
-	let cursorStyle: CursorStyleParams = $derived({
-		background: tint,
-		'mix-blend-mode': 'normal',
-		'border-color': 'none',
-		'backdrop-filter': 'none',
-		'z-index': -1
-	});
+	let cursorStyle: CursorStyleParams = $derived(
+		blend
+			? DEFAULT_STYLE
+			: {
+					background: tint,
+					'mix-blend-mode': 'normal',
+					'border-color': 'none',
+					'backdrop-filter': 'none',
+					'z-index': -1
+				}
+	);
 
 	const translation = new Spring({ x: 0, y: 0 }, { stiffness: 0.1, damping: 0.6 });
 
@@ -68,8 +84,10 @@
 		type={href ? undefined : 'button'}
 		class="btn block whitespace-nowrap text-small font-medium {twclass}"
 		class:has-border={border}
-		style="--tint: {tint}; --tX: {translation.current.x}; --tY: {translation.current
-			.y}; --br: {br}px;"
+		class:has-fill={fill}
+		class:blend
+		style="--tint: {tint}; --fill: {fill}; --fill-text: {fillText}; --tX: {translation.current
+			.x}; --tY: {translation.current.y}; --br: {br}px;"
 		{onclick}
 		{onmousemove}
 		{onmouseleave}
@@ -95,9 +113,19 @@
 		border: 1px solid theme('colors.line');
 	}
 
+	.has-fill {
+		color: var(--fill-text);
+		background: var(--fill);
+	}
+
 	.btn:hover {
 		color: theme('colors.bg');
 		background: var(--tint);
 		border-color: transparent;
+	}
+
+	.blend:hover {
+		color: var(--fill-text);
+		background: var(--fill);
 	}
 </style>

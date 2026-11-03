@@ -5,7 +5,6 @@
 	import Heading from '$lib/components/Heading.svelte';
 	import Seo from '$lib/components/Seo.svelte';
 	import Section from '$lib/layout/Section.svelte';
-	import { rippleTint } from '$lib/components/Background/Background.svelte.ts';
 	import {
 		cursorState,
 		GLASS_CURSOR_SHAPE,
@@ -59,7 +58,6 @@
 	interface Expanded {
 		src: string;
 		alt: string;
-		accent: string;
 		i: number;
 	}
 
@@ -79,7 +77,7 @@
 		{ stiffness: 0.09, damping: 0.56, precision: 0.1 }
 	);
 
-	function open(detail: { src: string; alt: string; accent: string }, i: number) {
+	function open(detail: { src: string; alt: string }, i: number) {
 		if (expanded || closing) return;
 		const el = tileEls[i];
 		if (!el) return;
@@ -122,7 +120,6 @@
 		scatter = map;
 		expanded = { ...detail, i };
 		peek = false;
-		rippleTint.color = detail.accent;
 		document.body.style.overflow = 'hidden';
 		requestAnimationFrame(() =>
 			requestAnimationFrame(() => {
@@ -149,7 +146,6 @@
 		setTimeout(() => {
 			expanded = null;
 			closing = false;
-			rippleTint.color = null;
 			document.body.style.overflow = '';
 			el?.querySelector('button')?.focus({ preventScroll: true });
 		}, 700);

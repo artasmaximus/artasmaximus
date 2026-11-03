@@ -1,7 +1,6 @@
 <script lang="ts">
 	import '@fontsource-variable/inter/opsz.css';
 	import '../app.css';
-	import Background from '$lib/components/Background/Background.svelte';
 	import Header from '$lib/layout/Header.svelte';
 	import Footer from '$lib/layout/Footer.svelte';
 	import Cursor from '$lib/cursor/Cursor.svelte';
@@ -20,7 +19,7 @@
 	afterNavigate(() => cursorState.reset());
 </script>
 
-<div class="app">
+<div class="app overflow-x-clip">
 	<a
 		href="#main"
 		class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-small focus:text-bg"
@@ -30,7 +29,6 @@
 	{#if hasFinePointer}
 		<Cursor />
 	{/if}
-	<Background dotRadius={25} />
 	<Header />
 	<main id="main" tabindex="-1" class="outline-none">
 		{@render children()}

@@ -3,9 +3,6 @@
 
 	// Ambient Mini Motorways hero: a few roads grow down from the top edge
 	// (blurring under the navbar) and little cars drive back and forth forever.
-	// Roads run on the dual grid — the lanes *between* the background shader's
-	// dots — so the two layers read as one city. Spacing must match the
-	// Background's dotRadius (25 CSS px).
 	const S = 25;
 	const GROW_MS = 1600;
 	const STAGGER_MS = 650;
@@ -45,11 +42,8 @@
 		let last = 0;
 
 		function genRoads(w: number, h: number) {
-			// Horizontal lanes sit between the shader's dot rows, whose phase
-			// depends on viewport height (gl_FragCoord is bottom-left origin).
-			const offY = h % S;
 			const lanesX = Math.floor(w / S);
-			const cell = (cx: number, cy: number): Pt => ({ x: cx * S, y: offY + cy * S });
+			const cell = (cx: number, cy: number): Pt => ({ x: cx * S, y: cy * S });
 
 			const count = w > 900 ? 3 : 2;
 			const bands = [0.16, 0.48, 0.74];

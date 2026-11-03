@@ -1,5 +1,5 @@
 // Single source for the neutral palette. Tailwind's theme reads these too, so
-// components and shaders that need a raw value stay in step with the classes.
+// components that need a raw value stay in step with the classes.
 export const BG = '#FAFAFA';
 export const SURFACE = '#FFFFFF';
 export const INK = '#1A1A1A';

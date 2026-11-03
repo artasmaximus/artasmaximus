@@ -1,5 +1,6 @@
 <!-- Logo.svelte -->
 <script lang="ts">
+	import '@fontsource-variable/urbanist/wght.css';
 	import {
 		cursorState,
 		DEFAULT_SHAPE,
@@ -39,6 +40,8 @@
 
 <HoverEffect {hoverShape} {hoverStyle}>
 	<LockEffect {lockPos}>
-		<a href="/" aria-label="Artas Alajbegu, home" class="block text-heading font-semibold">AM</a>
+		<a href="/" aria-label="Artas Alajbegu, home" class="block font-logo text-heading font-semibold"
+			>AM</a
+		>
 	</LockEffect>
 </HoverEffect>

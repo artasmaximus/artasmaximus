@@ -1,14 +1,24 @@
 <script lang="ts">
 	import ProjectPage from '$lib/components/Project/ProjectPage.svelte';
 	import ProjectSection from '$lib/components/Project/ProjectSection.svelte';
+	import ScrollFrames from '$lib/components/Project/ScrollFrames.svelte';
 	import { getProject } from '$lib/projects';
 
-	// Draft: unlisted until footage exists. Then add an Outcome section with
-	// <ScrollVideo src={footage} />, add a cover, and remove `draft` in projects.ts.
 	const project = getProject('slimesimulation');
+
+	const frame = (index: number) => `/slime-frames/frame_${String(index + 1).padStart(4, '0')}.webp`;
 </script>
 
-<ProjectPage {project}>
+<ProjectPage {project} dark>
+	<ScrollFrames
+		{frame}
+		darkAbove
+		count={240}
+		width={1920}
+		height={1080}
+		alt="A solid disc of agents breaking apart into a glowing, branching network"
+	/>
+
 	<ProjectSection
 		title="The brief"
 		text={[

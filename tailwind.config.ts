@@ -31,7 +31,9 @@ export default {
 				'Helvetica',
 				'Arial',
 				'sans-serif'
-			]
+			],
+			// The AM logo only
+			logo: ['Urbanist Variable', 'sans-serif']
 		},
 
 		fontSize: {

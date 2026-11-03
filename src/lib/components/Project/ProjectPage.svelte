@@ -3,49 +3,62 @@
 	import Heading from '$lib/components/Heading.svelte';
 	import Reveal from '$lib/components/Reveal.svelte';
 	import Seo from '$lib/components/Seo.svelte';
-	import { bgDotColor } from '$lib/components/Background/Background.svelte.ts';
 	import { nextProject, type Project } from '$lib/projects';
+	import { INK, SURFACE } from '$lib/theme';
 
 	let {
 		project,
+		dark = false,
 		hero,
 		children
 	}: {
 		project: Project;
+		/* Puts the header on black, up behind the navbar and down into a dark first section. */
+		dark?: boolean;
 		hero?: () => any;
 		children: () => any;
 	} = $props();
 
 	let next = $derived(nextProject(project.slug));
-
-	$effect(() => {
-		bgDotColor.updatePrimary(project.dotPrimary);
-		bgDotColor.updateBlink(project.dotBlink);
-		return () => bgDotColor.reset();
-	});
 </script>
 
 <Seo title={project.name} description={project.summary} image={project.cover} />
 
 <article class="flex w-full flex-col gap-16 md:gap-24">
-	<Reveal>
-		<header class="flex flex-col gap-10">
-			<div class="flex flex-col gap-5">
-				<Heading>{project.name}</Heading>
-				<p class="max-w-prose text-lead text-ink-muted">{project.summary}</p>
-			</div>
-
-			{#if project.links?.length}
-				<div class="flex gap-2">
-					{#each project.links as link}
-						<Button href={link.href} external tint={project.accent} br={50} twclass="px-4 py-1.5">
-							{link.label} ↗
-						</Button>
-					{/each}
+	<div
+		class={dark
+			? 'relative isolate before:absolute before:-bottom-16 before:-top-[100vh] before:left-1/2 before:-z-10 before:w-screen before:-translate-x-1/2 before:bg-black md:before:-bottom-24'
+			: ''}
+	>
+		<Reveal>
+			<header class="flex flex-col gap-10">
+				<div class="flex flex-col gap-5">
+					<Heading light={dark}>{project.name}</Heading>
+					<p class="max-w-prose text-lead {dark ? 'text-white/70' : 'text-ink-muted'}">
+						{project.summary}
+					</p>
 				</div>
-			{/if}
-		</header>
-	</Reveal>
+
+				{#if project.links?.length}
+					<div class="flex gap-2">
+						{#each project.links as link}
+							<Button
+								href={link.href}
+								external
+								tint={project.accent}
+								fill={dark ? SURFACE : undefined}
+								fillText={dark ? INK : undefined}
+								br={50}
+								twclass="px-4 py-1.5"
+							>
+								{link.label} ↗
+							</Button>
+						{/each}
+					</div>
+				{/if}
+			</header>
+		</Reveal>
+	</div>
 
 	{#if hero}
 		<Reveal>

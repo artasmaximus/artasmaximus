@@ -2,8 +2,6 @@
 	import { Spring } from 'svelte/motion';
 	import GlassEffect from '$lib/cursor/effects/GlassEffect.svelte';
 	import Reveal from '../Reveal.svelte';
-	import { rippleTint } from '../Background/Background.svelte.ts';
-	import { dominantColor } from '$lib/utils/dominantColor';
 	import { prefersReducedMotion } from '$lib/utils/motion';
 
 	let {
@@ -13,15 +11,8 @@
 	}: {
 		src: string;
 		alt?: string;
-		onOpen?: (detail: { src: string; alt: string; accent: string }) => void;
+		onOpen?: (detail: { src: string; alt: string }) => void;
 	} = $props();
-
-	let accent = $state('#737373');
-
-	function handleLoad(e: Event) {
-		const color = dominantColor(e.currentTarget as HTMLImageElement);
-		if (color) accent = color;
-	}
 
 	let hoverSpring = new Spring(0, {
 		stiffness: 0.312,
@@ -33,15 +24,13 @@
 
 	function onMouseEnter() {
 		if (!reduceMotion) hoverSpring.set(1);
-		rippleTint.color = accent;
 	}
 	function onMouseLeave() {
 		hoverSpring.set(0);
-		rippleTint.color = null;
 	}
 
 	function open() {
-		onOpen?.({ src, alt, accent });
+		onOpen?.({ src, alt });
 	}
 </script>
 
@@ -56,7 +45,7 @@
 			onmouseleave={onMouseLeave}
 			style:transform="translate3d(0px, {translateY}px, 0px)"
 		>
-			<img {src} {alt} loading="lazy" onload={handleLoad} class="artwork aspect-auto rounded-lg" />
+			<img {src} {alt} loading="lazy" class="artwork aspect-auto rounded-lg" />
 			<span class="border-overlay" style:border-color="rgba(255, 255, 255, 0.5)"></span>
 		</button>
 	</GlassEffect>
