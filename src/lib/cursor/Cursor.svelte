@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { cursorState, GOLDEN_RATIO } from './CursorState.svelte';
+	import { prefersReducedMotion } from '$lib/utils/motion';
 
 	const SCALE_FACTOR = 1.2;
 	let isExpanded = false;
@@ -10,9 +11,10 @@
 
 	// Velocity squash & stretch: the dot elongates along its direction of travel
 	// and settles when it stops. Suppressed while morphed (ring/bubble/pill) so
-	// non-circular shapes never visibly rotate.
+	// non-circular shapes never visibly rotate. Off for reduced motion.
 	let stretch = $state({ angle: 0, amount: 0 });
 	let prevPos = { x: 0, y: 0 };
+	const reduceMotion = prefersReducedMotion();
 
 	function stretchLoop() {
 		const { x, y } = cursorState.position.current;
@@ -21,7 +23,7 @@
 		prevPos = { x, y };
 
 		const speed = Math.hypot(vx, vy);
-		const morphed = cursorState.isHovering || cursorState.isLockedPos;
+		const morphed = cursorState.isHovering || cursorState.isLockedPos || reduceMotion;
 		const target = morphed ? 0 : Math.min(speed * 0.009, 0.22);
 		const ease = morphed ? 0.5 : 0.18;
 

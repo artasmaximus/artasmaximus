@@ -1,6 +1,5 @@
 <!-- Logo.svelte -->
 <script lang="ts">
-	import { fly } from 'svelte/transition';
 	import {
 		cursorState,
 		DEFAULT_SHAPE,
@@ -14,10 +13,9 @@
 	// underline the logo on hover
 	function hoverShape(contentRect: DOMRect | undefined): CursorShapeParams {
 		if (contentRect) {
-			const { width, height, top, left } = contentRect;
 			return {
-				width: width,
-				height: 4,
+				width: contentRect.width,
+				height: 3,
 				borderRadius: 2
 			};
 		}
@@ -27,7 +25,7 @@
 	let hoverStyle = DEFAULT_STYLE;
 
 	function lockPos(contentRect: DOMRect | undefined): CursorPositionParams {
-		// return the bottom left corner of the logo
+		// return the bottom center of the logo
 		if (contentRect) {
 			const { top, left, width, height } = contentRect;
 			return {
@@ -37,16 +35,10 @@
 		}
 		return { x: cursorState.position.current.x, y: cursorState.position.current.y };
 	}
-
-	const onclick = cursorState.reset;
 </script>
 
 <HoverEffect {hoverShape} {hoverStyle}>
 	<LockEffect {lockPos}>
-		<button in:fly={{ x: -50, duration: 200, opacity: 0 }} {onclick}>
-			<a href="/" class="z-10 cursor-none">
-				<div class="text-3xl font-bold">AM</div>
-			</a>
-		</button>
+		<a href="/" aria-label="Artas Alajbegu, home" class="block text-heading font-semibold">AM</a>
 	</LockEffect>
 </HoverEffect>

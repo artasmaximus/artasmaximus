@@ -1,63 +1,87 @@
 <script lang="ts">
-	import GradientText from '$lib/components/GradientText.svelte';
-	import IntersectionOberserver from '$lib/components/IntersectionObserver/IntersectionOberserver.svelte';
 	import Button from '$lib/components/Button/Button.svelte';
+	import Heading from '$lib/components/Heading.svelte';
+	import Reveal from '$lib/components/Reveal.svelte';
+	import Seo from '$lib/components/Seo.svelte';
 	import { bgDotColor } from '$lib/components/Background/Background.svelte.ts';
-	import { scale } from 'svelte/transition';
-	import type { ProjectTheme } from './theme';
+	import { nextProject, type Project } from '$lib/projects';
 
 	let {
-		theme,
-		meta = [],
-		links = [],
-		summary,
+		project,
+		hero,
 		children
 	}: {
-		theme: ProjectTheme;
-		meta?: string[];
-		links?: { label: string; href: string }[];
-		summary: string;
+		project: Project;
+		hero?: () => any;
 		children: () => any;
 	} = $props();
 
+	let facts = $derived(
+		[
+			{ label: 'Year', value: project.year },
+			{ label: 'Role', value: project.role },
+			{ label: 'Stack', value: project.stack },
+			{ label: 'Context', value: project.context }
+		].filter((fact) => fact.value)
+	);
+
+	let next = $derived(nextProject(project.slug));
+
 	$effect(() => {
-		bgDotColor.updatePrimary(theme.dotPrimary);
-		bgDotColor.updateBlink(theme.dotBlink);
+		bgDotColor.updatePrimary(project.dotPrimary);
+		bgDotColor.updateBlink(project.dotBlink);
 		return () => bgDotColor.reset();
 	});
 </script>
 
-<article class="flex w-full max-w-2xl flex-col gap-16 md:gap-24">
-	<IntersectionOberserver>
-		<header class="flex flex-col gap-5">
-			<div
-				class="flex flex-wrap items-center justify-between gap-3 text-xs tracking-wide text-stone-500"
-			>
-				<span>{meta.join(' · ')}</span>
-				{#if links.length}
-					<span class="flex gap-2">
-						{#each links as link}
-							<a href={link.href} target="_blank" rel="noreferrer">
-								<Button color={theme.accent} br={50} border={false} twclass="px-3 py-1">
-									{link.label} ↗
-								</Button>
-							</a>
+<Seo title={project.name} description={project.summary} image={project.cover} />
+
+<article class="flex w-full flex-col gap-16 md:gap-24">
+	<Reveal>
+		<header class="flex flex-col gap-10">
+			<div class="flex flex-col gap-5">
+				<Heading>{project.name}</Heading>
+				<p class="max-w-prose text-lead text-ink-muted">{project.summary}</p>
+			</div>
+
+			<div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+				<dl class="flex flex-wrap gap-x-12 gap-y-4">
+					{#each facts as { label, value }}
+						<div class="flex flex-col gap-1">
+							<dt class="text-label text-ink-subtle">{label}</dt>
+							<dd class="text-small tabular-nums text-ink">{value}</dd>
+						</div>
+					{/each}
+				</dl>
+				{#if project.links?.length}
+					<div class="flex gap-2">
+						{#each project.links as link}
+							<Button href={link.href} external tint={project.accent} br={50} twclass="px-4 py-1.5">
+								{link.label} ↗
+							</Button>
 						{/each}
-					</span>
+					</div>
 				{/if}
 			</div>
-			<div in:scale={{ duration: 500 }}>
-				<GradientText
-					text={theme.name}
-					twclass="text-4xl md:text-5xl whitespace-nowrap"
-					from={theme.from}
-					to={theme.to}
-				/>
-			</div>
-			<p class="max-w-prose text-[17px] leading-relaxed text-stone-700">{summary}</p>
-			<hr class="border-stone-200" />
 		</header>
-	</IntersectionOberserver>
+	</Reveal>
+
+	{#if hero}
+		<Reveal>
+			{@render hero()}
+		</Reveal>
+	{/if}
 
 	{@render children()}
+
+	{#if next.slug !== project.slug}
+		<Reveal>
+			<nav aria-label="Next project" class="flex flex-col gap-4 border-t border-line pt-6">
+				<span class="text-label text-ink-subtle">Next project</span>
+				<Button href="/projects/{next.slug}" tint={next.accent} twclass="px-4 py-1.5" br={50}>
+					{next.name} →
+				</Button>
+			</nav>
+		</Reveal>
+	{/if}
 </article>

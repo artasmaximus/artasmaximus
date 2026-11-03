@@ -24,7 +24,7 @@ export class Color {
 
 export const bgDotColor = new Color();
 
-// When set, click ripples use this color instead of a random accent — e.g. the
+// When set, click ripples use this color instead of the page's blink color — e.g. the
 // Artwork page tints ripples with the hovered piece's dominant color.
 export class RippleTint {
 	color: string | null = $state(null);

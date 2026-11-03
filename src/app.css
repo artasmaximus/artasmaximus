@@ -1,3 +1,65 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+@layer base {
+	html {
+		@apply bg-bg font-sans text-body text-ink antialiased;
+		font-optical-sizing: auto;
+	}
+
+	/* Set from the layout only when a fine pointer exists, so touch laptops and
+	   failed scripts always keep a real cursor. */
+	html.custom-cursor,
+	html.custom-cursor * {
+		cursor: none !important;
+	}
+
+	:focus-visible {
+		outline: 2px solid theme('colors.ink.DEFAULT');
+		outline-offset: 2px;
+		border-radius: 2px;
+	}
+
+	::selection {
+		background: theme('colors.ink.DEFAULT');
+		color: theme('colors.bg');
+	}
+}
+
+@layer components {
+	.page {
+		@apply mx-auto w-full max-w-content px-gutter;
+	}
+
+	.reveal {
+		opacity: 0;
+		transform: translateY(16px);
+		transition:
+			opacity 0.5s ease-out,
+			transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+	}
+
+	.reveal.is-visible {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	::before,
+	::after {
+		animation-duration: 0.01ms !important;
+		animation-delay: 0ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		transition-delay: 0ms !important;
+		scroll-behavior: auto !important;
+	}
+
+	.reveal {
+		opacity: 1;
+		transform: none;
+	}
+}

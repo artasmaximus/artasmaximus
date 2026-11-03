@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { bgDotColor, rippleTint } from './Background.svelte.ts';
+	import { BG } from '$lib/theme';
+	import { prefersReducedMotion } from '$lib/utils/motion';
 
 	const { dotRadius = 35 } = $props();
-
-	const BG_COLOR = '#FAFAF9'; // Tailwind stone-50
 
 	let canvas: HTMLCanvasElement | undefined = $state();
 	let webglFailed = $state(false);
@@ -23,7 +23,8 @@
 		uniform float u_time;        // seconds since start
 		uniform vec2  u_resolution;  // physical canvas px (already scaled by dpr)
 		uniform float u_spacing;     // logical cell size in px (35.0 * dpr)
-		uniform vec3  u_bg;          // #FAFAF9
+		uniform float u_dot_radius;  // physical px radius of each dot (0.8 * dpr)
+		uniform vec3  u_bg;          // page background
 		uniform vec3  u_primary;     // #E0E0E0
 		uniform vec3  u_blink;       // #6B6B6B
 
@@ -105,15 +106,14 @@
 
 			// ---- dot colour --------------------------------------------------
 			// Ambient blink toward u_blink, then the click ripple paints its
-			// own random tint on top wherever a wavefront is passing.
+			// own tint on top wherever a wavefront is passing.
 			vec3 dotColor = mix(u_primary, u_blink, blinkAmt);
 			dotColor = mix(dotColor, rippleColor, rippleAmt);
 
 			// ---- SDF circle (anti-aliased with smoothstep) -------------------
 			float dist      = length(cellPos - center);
-			float dotRadius = 1.5;    // 1 px radius = 2 px diameter dot
 			float aa        = 0.8;    // sub-pixel anti-aliasing width
-			float alpha     = 1.0 - smoothstep(dotRadius - aa, dotRadius + aa, dist);
+			float alpha     = 1.0 - smoothstep(u_dot_radius - aa, u_dot_radius + aa, dist);
 
 			// ---- composite ---------------------------------------------------
 			vec3 color = mix(u_bg, dotColor, alpha);
@@ -188,10 +188,11 @@
 		const uBg = gl.getUniformLocation(program, 'u_bg');
 		const uPrimary = gl.getUniformLocation(program, 'u_primary');
 		const uBlink = gl.getUniformLocation(program, 'u_blink');
+		const uDotRadius = gl.getUniformLocation(program, 'u_dot_radius');
 		const uClicks = gl.getUniformLocation(program, 'u_clicks[0]');
 		const uClickColors = gl.getUniformLocation(program, 'u_clickColors[0]');
 
-		gl.uniform3fv(uBg, hexToVec3(BG_COLOR));
+		gl.uniform3fv(uBg, hexToVec3(BG));
 
 		// ---- click ripples -----------------------------------------------
 		// Ring buffer of the 8 most recent clicks. Each is [x, y, time].
@@ -204,16 +205,14 @@
 		gl.uniform3fv(uClicks, clicks);
 		gl.uniform3fv(uClickColors, clickColors);
 
-		// Accent palette pulled from the site's gradients (landing text + the
-		// Projects / Artwork / Resume cards). Each click picks one at random.
-		const RIPPLE_COLORS = [
-			'#9747FF', // purple — Frontend Developer / Projects
-			'#56D82E', // green  — UX Designer
-			'#FF4992', // pink   — Collaborator
-			'#FFA21F', // orange — + Friend ;)
-			'#48C8FF', // cyan   — Artwork
-			'#FF48CE' //  magenta — Resume
-		];
+		// Ambient blink and ripples are motion, so reduced-motion users get a
+		// single static frame of the grid.
+		const reduceMotion = prefersReducedMotion();
+		function drawStatic() {
+			if (!reduceMotion) return;
+			gl!.uniform1f(uTime, 0);
+			gl!.drawArrays(gl!.TRIANGLES, 0, 6);
+		}
 
 		function onPointerDown(e: PointerEvent) {
 			const dpr = window.devicePixelRatio || 1;
@@ -223,9 +222,8 @@
 			clicks[base + 1] = (window.innerHeight - e.clientY) * dpr;
 			clicks[base + 2] = nowSec;
 
-			const [r, g, b] = hexToVec3(
-				rippleTint.color ?? RIPPLE_COLORS[Math.floor(Math.random() * RIPPLE_COLORS.length)]
-			);
+			// The page decides the color: the hovered artwork, or the project's dot tint.
+			const [r, g, b] = hexToVec3(rippleTint.color ?? bgDotColor.blink);
 			clickColors[base] = r;
 			clickColors[base + 1] = g;
 			clickColors[base + 2] = b;
@@ -234,7 +232,7 @@
 			gl!.uniform3fv(uClicks, clicks);
 			gl!.uniform3fv(uClickColors, clickColors);
 		}
-		window.addEventListener('pointerdown', onPointerDown);
+		if (!reduceMotion) window.addEventListener('pointerdown', onPointerDown);
 
 		// ---- resize ------------------------------------------------------
 		function resize() {
@@ -244,6 +242,8 @@
 			gl!.viewport(0, 0, cv.width, cv.height);
 			gl!.uniform2f(uResolution, cv.width, cv.height);
 			gl!.uniform1f(uSpacing, dotRadius * dpr);
+			gl!.uniform1f(uDotRadius, 0.8 * dpr);
+			drawStatic();
 		}
 		resize();
 		window.addEventListener('resize', resize);
@@ -252,7 +252,8 @@
 		const stopEffect = $effect.root(() => {
 			$effect(() => {
 				gl!.uniform3fv(uPrimary, hexToVec3(bgDotColor.primary));
-				gl!.uniform3fv(uBlink, hexToVec3(bgDotColor.blink));
+				gl!.uniform3fv(uBlink, hexToVec3(reduceMotion ? bgDotColor.primary : bgDotColor.blink));
+				drawStatic();
 			});
 		});
 
@@ -265,7 +266,7 @@
 			gl!.drawArrays(gl!.TRIANGLES, 0, 6);
 			rafId = requestAnimationFrame(render);
 		}
-		rafId = requestAnimationFrame(render);
+		if (!reduceMotion) rafId = requestAnimationFrame(render);
 
 		return () => {
 			cancelAnimationFrame(rafId);
@@ -285,7 +286,7 @@
 
 <style>
 	.bg-fallback {
-		background-color: #fafaf9;
+		background-color: #fafafa;
 		background-image: radial-gradient(circle, #e0e0e0 1px, transparent 1px);
 		background-size: 35px 35px;
 	}

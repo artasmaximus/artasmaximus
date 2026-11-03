@@ -2,7 +2,8 @@
 	import { onMount } from 'svelte';
 	import { Spring } from 'svelte/motion';
 	import Artwork from '$lib/components/Artwork/Artwork.svelte';
-	import GradientText from '$lib/components/GradientText.svelte';
+	import Heading from '$lib/components/Heading.svelte';
+	import Seo from '$lib/components/Seo.svelte';
 	import Section from '$lib/layout/Section.svelte';
 	import { rippleTint } from '$lib/components/Background/Background.svelte.ts';
 	import {
@@ -10,6 +11,7 @@
 		GLASS_CURSOR_SHAPE,
 		GLASS_CURSOR_STYLE
 	} from '$lib/cursor/CursorState.svelte';
+	import { prefersReducedMotion } from '$lib/utils/motion';
 
 	// Vite bundles all images at build time — no per-card runtime async imports
 	const rawModules = import.meta.glob('/src/lib/assets/artwork/drawing*.jpeg', {
@@ -46,6 +48,7 @@
 	// Per-column scroll drift: neighbouring waterfalls fall at slightly
 	// different speeds.
 	let scrollY = $state(0);
+	const reduceMotion = prefersReducedMotion();
 	const DRIFTS: Record<number, number[]> = {
 		1: [0],
 		2: [0.05, -0.04],
@@ -68,9 +71,8 @@
 	// (not opacity on a parent) keeps the blur composited against the real page,
 	// so it builds and releases in step with the tile motion instead of popping.
 	let overlayOn = $state(false);
-	let scatter = $state<Record<number, { dx: number; dy: number; rot: number; delay: number }>>(
-		{}
-	);
+	let closeButton = $state<HTMLButtonElement>();
+	let scatter = $state<Record<number, { dx: number; dy: number; rot: number; delay: number }>>({});
 
 	const stage = new Spring(
 		{ x: 0, y: 0, w: 0, h: 0 },
@@ -89,12 +91,15 @@
 		const th = tw / aspect;
 
 		stage.set({ x: rect.left, y: rect.top, w: rect.width, h: rect.height }, { instant: true });
-		stage.target = {
-			x: (window.innerWidth - tw) / 2,
-			y: (window.innerHeight - th) / 2,
-			w: tw,
-			h: th
-		};
+		stage.set(
+			{
+				x: (window.innerWidth - tw) / 2,
+				y: (window.innerHeight - th) / 2,
+				w: tw,
+				h: th
+			},
+			{ instant: reduceMotion }
+		);
 
 		const cx = rect.left + rect.width / 2;
 		const cy = rect.top + rect.height / 2;
@@ -119,7 +124,12 @@
 		peek = false;
 		rippleTint.color = detail.accent;
 		document.body.style.overflow = 'hidden';
-		requestAnimationFrame(() => requestAnimationFrame(() => (overlayOn = true)));
+		requestAnimationFrame(() =>
+			requestAnimationFrame(() => {
+				overlayOn = true;
+				closeButton?.focus();
+			})
+		);
 	}
 
 	function close() {
@@ -130,7 +140,10 @@
 		const el = tileEls[expanded.i];
 		if (el) {
 			const rect = el.getBoundingClientRect();
-			stage.target = { x: rect.left, y: rect.top, w: rect.width, h: rect.height };
+			stage.set(
+				{ x: rect.left, y: rect.top, w: rect.width, h: rect.height },
+				{ instant: reduceMotion }
+			);
 		}
 		scatter = {};
 		setTimeout(() => {
@@ -138,6 +151,7 @@
 			closing = false;
 			rippleTint.color = null;
 			document.body.style.overflow = '';
+			el?.querySelector('button')?.focus({ preventScroll: true });
 		}, 700);
 	}
 
@@ -170,15 +184,24 @@
 
 <svelte:window bind:scrollY onkeydown={onKeydown} />
 
+<Seo title="Artwork" description="Drawings by Artas Alajbegu, made in Procreate on iPad Pro." />
+
 <Section>
-	<div class="flex w-full flex-col items-center gap-16 pb-24 pt-12 md:pt-0">
-		<GradientText text="Artwork" twclass="text-4xl whitespace-nowrap" to="#48C8FF" />
+	<div class="flex w-full flex-col gap-16">
+		<header class="flex flex-col gap-4">
+			<Heading>Artwork</Heading>
+			<p class="max-w-prose text-lead text-ink-muted">
+				A collection of drawings, each made in Procreate on iPad Pro.
+			</p>
+		</header>
 
 		<div class="grid w-full gap-8" style="grid-template-columns: repeat({colCount}, 1fr);">
 			{#each cols as col, ci}
 				<div
 					class="flex flex-col gap-8"
-					style="transform: translateY({colCount > 1 ? -scrollY * DRIFTS[colCount][ci] : 0}px);"
+					style="transform: translateY({colCount > 1 && !reduceMotion
+						? -scrollY * DRIFTS[colCount][ci]
+						: 0}px);"
 				>
 					{#each col as item (item.src)}
 						<div bind:this={tileEls[item.i]} style={tileStyle(item.i)}>
@@ -195,7 +218,7 @@
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="fixed inset-0 z-30 cursor-none"
+		class="fixed inset-0 z-30"
 		onclick={close}
 		onmousemove={() => {
 			if (!closing) peek = true;
@@ -204,20 +227,24 @@
 		{#each [{ max: 2, from: 30, to: 55 }, { max: 7, from: 48, to: 75 }, { max: 16, from: 65, to: 92 }] as layer}
 			<div
 				class="pointer-events-none absolute inset-0"
-				style="backdrop-filter: blur({overlayOn ? layer.max : 0}px); -webkit-backdrop-filter: blur({overlayOn
+				style="backdrop-filter: blur({overlayOn
+					? layer.max
+					: 0}px); -webkit-backdrop-filter: blur({overlayOn
 					? layer.max
 					: 0}px); transition: backdrop-filter 0.65s cubic-bezier(0.4, 0, 0.2, 1), -webkit-backdrop-filter 0.65s cubic-bezier(0.4, 0, 0.2, 1); mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, transparent {layer.from}%, black {layer.to}%); -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, transparent {layer.from}%, black {layer.to}%);"
 			></div>
 		{/each}
 		<div
 			class="pointer-events-none absolute inset-0"
-			style="background: rgba(250, 250, 249, 0.55); mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, transparent 35%, black 80%); -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, transparent 35%, black 80%); opacity: {overlayOn
+			style="background: rgba(250, 250, 250, 0.55); mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, transparent 35%, black 80%); -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, transparent 35%, black 80%); opacity: {overlayOn
 				? peek
 					? 1
 					: 0.75
 				: 0}; transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1);"
 		></div>
 	</div>
+
+	<button bind:this={closeButton} class="sr-only" onclick={close}>Close artwork</button>
 
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
@@ -226,7 +253,7 @@
 			.w}px; height: {stage.current.h}px;"
 	>
 		<div
-			class="pointer-events-auto h-full w-full cursor-none transition-transform duration-300"
+			class="pointer-events-auto h-full w-full transition-transform duration-300"
 			style="transform: scale({peek && !closing ? 0.965 : 1});"
 			onmouseenter={onStageEnter}
 			onmouseleave={onStageLeave}
@@ -234,7 +261,7 @@
 			<img
 				src={expanded.src}
 				alt={expanded.alt}
-				class="h-full w-full rounded-xl object-cover shadow-2xl"
+				class="h-full w-full rounded-lg object-cover shadow-2xl"
 			/>
 		</div>
 	</div>

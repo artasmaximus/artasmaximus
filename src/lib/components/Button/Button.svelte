@@ -1,62 +1,54 @@
 <script lang="ts">
 	import BubbleEffect from '$lib/cursor/effects/BubbleEffect.svelte';
 	import { cursorState, type CursorStyleParams } from '$lib/cursor/CursorState.svelte';
+	import { INK } from '$lib/theme';
 	import { Spring } from 'svelte/motion';
-	import type { Button } from './Button.svelte.ts';
 
 	let {
-		color,
+		tint = INK,
+		href,
+		download,
+		external = false,
 		border = true,
-		br = 15,
-		twclass = 'z-10 flex w-full cursor-none whitespace-nowrap px-6 py-3 text-center',
+		br = 12,
+		twclass = 'px-5 py-2.5',
 		onClick,
 		children
-	}: Button = $props();
+	}: {
+		/* Fill of the cursor bubble on hover. The label stays ink at rest. */
+		tint?: string;
+		/* Renders a link when set, a button otherwise. */
+		href?: string;
+		download?: string;
+		external?: boolean;
+		border?: boolean;
+		br?: number;
+		twclass?: string;
+		onClick?: () => void;
+		children: () => any;
+	} = $props();
 
-	let button = $state<HTMLElement>();
-	let buttonCenter = $state<Pos>({ x: 0, y: 0 });
-
-	let cursorStyle: CursorStyleParams = {
-		background: color,
+	let cursorStyle: CursorStyleParams = $derived({
+		background: tint,
 		'mix-blend-mode': 'normal',
 		'border-color': 'none',
 		'backdrop-filter': 'none',
 		'z-index': -1
-	};
-
-	type Pos = { x: number; y: number };
-
-	const translation = new Spring(
-		{ x: 0, y: 0 },
-		{
-			stiffness: 0.1,
-			damping: 0.6
-		}
-	);
-
-	$effect(() => {
-		if (button) {
-			let { top, left, width, height } = button.getBoundingClientRect();
-			buttonCenter.x = left + width / 2;
-			buttonCenter.y = top + height / 2;
-		}
 	});
+
+	const translation = new Spring({ x: 0, y: 0 }, { stiffness: 0.1, damping: 0.6 });
 
 	function onclick() {
 		cursorState.reset();
-		if (onClick) {
-			onClick();
-		}
+		onClick?.();
 	}
 
 	function onmousemove(e: MouseEvent) {
-		if (!button) return;
-
-		const rect = button.getBoundingClientRect();
-		const x = e.clientX - rect.left - rect.width / 2;
-		const y = e.clientY - rect.top - rect.height / 2;
-
-		translation.set({ x, y });
+		const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+		translation.set({
+			x: e.clientX - rect.left - rect.width / 2,
+			y: e.clientY - rect.top - rect.height / 2
+		});
 	}
 
 	function onmouseleave() {
@@ -64,24 +56,31 @@
 	}
 </script>
 
-<BubbleEffect padding={0} {br} {cursorStyle} twclass="w-full place-content-center">
-	<button
-		class="{twclass} cursor-none"
-		class:border
-		style="--color: {color}; --border-color: {color}30; --tX: {translation.current
-			.x}; --tY: {translation.current.y}; --br: {br}px;"
+<BubbleEffect padding={0} {br} {cursorStyle} twclass="w-fit">
+	<!-- Always a link or a button, both natively interactive. -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<svelte:element
+		this={href ? 'a' : 'button'}
+		{href}
+		{download}
+		target={external ? '_blank' : undefined}
+		rel={external ? 'noreferrer' : undefined}
+		type={href ? undefined : 'button'}
+		class="btn block whitespace-nowrap text-small font-medium {twclass}"
+		class:has-border={border}
+		style="--tint: {tint}; --tX: {translation.current.x}; --tY: {translation.current
+			.y}; --br: {br}px;"
 		{onclick}
 		{onmousemove}
 		{onmouseleave}
-		bind:this={button}
 	>
 		{@render children()}
-	</button>
+	</svelte:element>
 </BubbleEffect>
 
 <style>
-	button {
-		color: var(--color);
+	.btn {
+		color: theme('colors.ink.DEFAULT');
 		background: none;
 		border-radius: var(--br);
 		transition:
@@ -92,15 +91,13 @@
 		transform: translateX(calc(var(--tX) * 0.1618px)) translateY(calc(var(--tY) * 0.1618px));
 	}
 
-	.border {
-		border-radius: var(--br);
-		border-width: 2px;
-		border-color: var(--border-color);
+	.has-border {
+		border: 1px solid theme('colors.line');
 	}
 
-	button:hover {
-		color: #fafafa;
-		background: var(--color);
-		border-color: #fafafa00;
+	.btn:hover {
+		color: theme('colors.bg');
+		background: var(--tint);
+		border-color: transparent;
 	}
 </style>

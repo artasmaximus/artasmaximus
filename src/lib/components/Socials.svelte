@@ -1,13 +1,9 @@
 <script lang="ts">
-	interface SocialButton {
-		platform: string;
-		bg: string;
-	}
-
 	import AtSign from '../icons/AtSign.svelte';
 	import SocialIcon from '../icons/SocialIcon.svelte';
 	import BubbleEffect from '../cursor/effects/BubbleEffect.svelte';
 	import { DEFAULT_STYLE } from '../cursor/CursorState.svelte';
+	import { INK } from '$lib/theme';
 	import { fly } from 'svelte/transition';
 
 	let open = $state(false);
@@ -15,15 +11,7 @@
 	const ANIMATION_DURATION = 100; // Made this shorter for snappier animations
 	const STAGGER_DELAY = 50;
 
-	const socialIcons: SocialButton[] = $state([
-		{ platform: 'linkedin', bg: '#006699' },
-		{ platform: 'github', bg: '#333333' },
-		{
-			platform: 'instagram',
-			bg: 'linear-gradient(to bottom right, #5B4FE9 0%, #8F39CE 21%, #D53692 38%, #F75274 52%, #FCBB45 74%, #FBE18A 100%);'
-		},
-		{ platform: 'facebook', bg: '#337FFF' }
-	]);
+	const socialIcons = ['linkedin', 'github'];
 </script>
 
 <div class="wrapper items-center">
@@ -39,7 +27,7 @@
 
 	<div class="socialLinks">
 		{#if open}
-			{#each socialIcons as { platform, bg }, i}
+			{#each socialIcons as platform, i}
 				<div
 					class="icon"
 					in:fly|global={{ y: 20, duration: ANIMATION_DURATION, delay: i * STAGGER_DELAY }}
@@ -49,7 +37,7 @@
 						delay: (socialIcons.length - 1 - i) * STAGGER_DELAY
 					}}
 				>
-					<SocialIcon {platform} {bg} />
+					<SocialIcon {platform} bg={INK} />
 				</div>
 			{/each}
 		{/if}
@@ -93,24 +81,13 @@
 	.icon:nth-child(2) {
 		top: 3rem;
 	}
-	.icon:nth-child(3) {
-		top: 6rem;
-	}
-	.icon:nth-child(4) {
-		top: 9rem;
-	}
 
 	.atSignButton {
 		background: none;
 		border: none;
 		padding: 0;
-		cursor: pointer;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-	}
-
-	button:hover {
-		cursor: none;
 	}
 </style>

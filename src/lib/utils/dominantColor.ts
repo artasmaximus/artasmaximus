@@ -1,7 +1,7 @@
 /**
  * Extracts a usable accent color from an image: saturated pixels dominate the
  * average, then saturation/lightness are clamped so the result works as a
- * cursor-ring tint and background-ripple color on the stone-50 site background.
+ * background-ripple color on the site background.
  * Grayscale drawings resolve to an honest mid-gray.
  */
 export function dominantColor(img: HTMLImageElement): string | null {
@@ -40,10 +40,7 @@ export function dominantColor(img: HTMLImageElement): string | null {
 		if (s > 0.12) s = Math.max(s, 0.5);
 		l = Math.min(Math.max(l, 0.35), 0.55);
 		const [R2, G2, B2] = hslToRgb(h, s, l);
-		return (
-			'#' +
-			[R2, G2, B2].map((v) => Math.round(v).toString(16).padStart(2, '0')).join('')
-		);
+		return '#' + [R2, G2, B2].map((v) => Math.round(v).toString(16).padStart(2, '0')).join('');
 	} catch {
 		return null;
 	}

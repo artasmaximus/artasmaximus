@@ -2,6 +2,7 @@
 	import BubbleEffect from '$lib/cursor/effects/BubbleEffect.svelte';
 	import type { CursorStyleParams } from '$lib/cursor/CursorState.svelte';
 	import { SocialsInfo } from './IconPaths';
+	import { BG, INK } from '$lib/theme';
 	const {
 		platform,
 		bg
@@ -19,7 +20,7 @@
 	let href = iconInfo.href;
 
 	let hovered = $state(false);
-	let fill = $derived.by(() => (hovered ? '#FAFAFA' : '#1E1E1E'));
+	let fill = $derived.by(() => (hovered ? BG : INK));
 
 	let cursorStyle: CursorStyleParams = {
 		background: bg,
@@ -39,8 +40,8 @@
 </script>
 
 <BubbleEffect padding={4} br={10} {cursorStyle}>
-	<a {href} aria-label={platform}>
-		<div class="icon-container" {onmouseenter} {onmouseleave} role="complementary">
+	<a {href} aria-label={platform} target="_blank" rel="noreferrer" {onmouseenter} {onmouseleave}>
+		<div class="icon-container">
 			<svg xmlns="http://www.w3.org/2000/svg" {width} {height} {viewBox}>
 				<path d={path} {fill} style="fill-opacity:1;" />
 			</svg>
@@ -62,9 +63,5 @@
 	.icon-container svg {
 		width: 100%;
 		height: 100%;
-	}
-
-	a {
-		cursor: none;
 	}
 </style>

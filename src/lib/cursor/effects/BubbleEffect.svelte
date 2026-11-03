@@ -60,7 +60,7 @@
 	{onmouseenter}
 	{onmouseleave}
 	class="bubbleEffect {twclass ?? ''}"
-	role="complementary"
+	role="presentation"
 >
 	{@render children()}
 </div>

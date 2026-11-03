@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Spring } from 'svelte/motion';
-	import { scale as scaleTransition } from 'svelte/transition';
-	import RingEffect from '$lib/cursor/effects/RingEffect.svelte';
-	import IntersectionOberserver from '../IntersectionObserver/IntersectionOberserver.svelte';
+	import GlassEffect from '$lib/cursor/effects/GlassEffect.svelte';
+	import Reveal from '../Reveal.svelte';
 	import { rippleTint } from '../Background/Background.svelte.ts';
 	import { dominantColor } from '$lib/utils/dominantColor';
+	import { prefersReducedMotion } from '$lib/utils/motion';
 
 	let {
 		src,
@@ -16,7 +16,7 @@
 		onOpen?: (detail: { src: string; alt: string; accent: string }) => void;
 	} = $props();
 
-	let accent = $state('#78716C');
+	let accent = $state('#737373');
 
 	function handleLoad(e: Event) {
 		const color = dominantColor(e.currentTarget as HTMLImageElement);
@@ -28,11 +28,11 @@
 		damping: 0.9379
 	});
 
+	const reduceMotion = prefersReducedMotion();
 	let translateY = $derived(-10 * hoverSpring.current);
-	let scale = $derived(1 + hoverSpring.current / 40);
 
 	function onMouseEnter() {
-		hoverSpring.set(1);
+		if (!reduceMotion) hoverSpring.set(1);
 		rippleTint.color = accent;
 	}
 	function onMouseLeave() {
@@ -45,39 +45,32 @@
 	}
 </script>
 
-<RingEffect {accent}>
-	<div
-		class="artwork-container cursor-none"
-		onkeydown={(e) => e.key === 'Enter' && open()}
-		onclick={open}
-		onmouseenter={onMouseEnter}
-		onmouseleave={onMouseLeave}
-		role="button"
-		tabindex="0"
-		style:transform="translate3d(0px, {translateY}px, 0px) scale({scale})"
-	>
-		<IntersectionOberserver>
-			<img
-				{src}
-				{alt}
-				loading="lazy"
-				onload={handleLoad}
-				in:scaleTransition={{ duration: 500, start: 0.93 }}
-				class="artwork aspect-auto rounded-xl"
-			/>
-			<div class="border-overlay" style:border-color="rgba(255, 255, 255, 0.5)"></div>
-		</IntersectionOberserver>
-	</div>
-</RingEffect>
+<Reveal>
+	<GlassEffect>
+		<button
+			type="button"
+			class="artwork-container"
+			aria-label="Expand {alt}"
+			onclick={open}
+			onmouseenter={onMouseEnter}
+			onmouseleave={onMouseLeave}
+			style:transform="translate3d(0px, {translateY}px, 0px)"
+		>
+			<img {src} {alt} loading="lazy" onload={handleLoad} class="artwork aspect-auto rounded-lg" />
+			<span class="border-overlay" style:border-color="rgba(255, 255, 255, 0.5)"></span>
+		</button>
+	</GlassEffect>
+</Reveal>
 
 <style>
 	.artwork-container {
+		display: block;
 		position: relative;
 		width: fit-content;
 	}
 
 	.artwork {
-		border-radius: 0.75rem;
+		border-radius: 0.5rem;
 	}
 
 	img {
@@ -98,7 +91,7 @@
 		position: absolute;
 		inset: 0;
 		border: 2px solid;
-		border-radius: 0.75rem;
+		border-radius: 0.5rem;
 		pointer-events: none;
 		mix-blend-mode: overlay;
 	}

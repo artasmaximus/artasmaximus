@@ -3,18 +3,13 @@
 	import BubbleEffect from '$lib/cursor/effects/BubbleEffect.svelte';
 	import { DEFAULT_STYLE } from '$lib/cursor/CursorState.svelte';
 	import MenuIcon from './MenuIcon.svelte';
+	import { navItems } from '$lib/nav';
 	import { fly } from 'svelte/transition';
 
 	let open = $state(false);
 
 	const ANIMATION_DURATION = 100;
 	const STAGGER_DELAY = 50;
-
-	const menuItems = [
-		{ href: '/Projects', label: 'Projects' },
-		{ href: '/Artwork', label: 'Artwork' },
-		{ href: '/Resume', label: 'Resume' }
-	];
 </script>
 
 <div class="relative lg:hidden">
@@ -23,6 +18,7 @@
 			class="menu-button"
 			onclick={() => (open = !open)}
 			aria-label={open ? 'Close menu' : 'Open menu'}
+			aria-expanded={open}
 		>
 			<MenuIcon {open} />
 		</button>
@@ -30,27 +26,26 @@
 
 	<div class="menu-links">
 		{#if open}
-			{#each menuItems as { href, label }, i}
+			{#each navItems as { label, href, download }, i}
 				<div
 					class="menu-item"
 					in:fly|global={{ y: 20, duration: ANIMATION_DURATION, delay: i * STAGGER_DELAY }}
 					out:fly|global={{
 						y: 20,
 						duration: ANIMATION_DURATION,
-						delay: (menuItems.length - 1 - i) * STAGGER_DELAY
+						delay: (navItems.length - 1 - i) * STAGGER_DELAY
 					}}
 				>
-					<a {href}>
-						<Button
-							onClick={() => (open = false)}
-							color="#1e1e1e"
-							twclass="w-full px-3 py-1"
-							br={50}
-							border={false}
-						>
-							{label}
-						</Button>
-					</a>
+					<Button
+						{href}
+						{download}
+						onClick={() => (open = false)}
+						twclass="px-3 py-1"
+						br={50}
+						border={false}
+					>
+						{label}
+					</Button>
 				</div>
 			{/each}
 		{/if}
@@ -62,7 +57,6 @@
 		background: none;
 		border: none;
 		padding: 0;
-		cursor: pointer;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -97,9 +91,5 @@
 	}
 	.menu-item:nth-child(3) {
 		top: 6rem;
-	}
-
-	button:hover {
-		cursor: none;
 	}
 </style>

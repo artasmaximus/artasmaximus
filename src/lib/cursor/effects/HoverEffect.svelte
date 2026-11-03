@@ -40,7 +40,7 @@
 	{onmouseenter}
 	{onmouseleave}
 	class="hoverEffect {twclass ?? ''}"
-	role="complementary"
+	role="presentation"
 >
 	{@render children()}
 </div>

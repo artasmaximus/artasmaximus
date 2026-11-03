@@ -29,7 +29,7 @@
 	{onmouseenter}
 	{onmouseleave}
 	class="lockEffect {twclass ?? ''}"
-	role="complementary"
+	role="presentation"
 >
 	{@render children()}
 </div>
