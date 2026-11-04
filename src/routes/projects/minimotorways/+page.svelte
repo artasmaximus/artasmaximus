@@ -3,13 +3,11 @@
 	import Figure from '$lib/components/Project/Figure.svelte';
 	import ProjectPage from '$lib/components/Project/ProjectPage.svelte';
 	import ProjectSection from '$lib/components/Project/ProjectSection.svelte';
-	import RoadHero from '$lib/components/Project/RoadHero.svelte';
+	import RoadDivider from '$lib/components/Project/RoadDivider.svelte';
 	import { getProject } from '$lib/projects';
 
 	const project = getProject('minimotorways');
 </script>
-
-<RoadHero />
 
 <ProjectPage {project}>
 	<ProjectSection
@@ -19,24 +17,39 @@
 			'Players connect colorful buildings with matching destinations, growing a road network that gets harder to manage as more buildings and traffic appear.'
 		]}
 	>
+		{#snippet divider()}
+			<RoadDivider />
+		{/snippet}
 		<Figure mat src={rulesImg} alt="The rules screen of the Mini Motorways recreation" />
 	</ProjectSection>
 
 	<ProjectSection
 		title="Approach"
 		text={[
-			'The core of the game is a custom A* pathfinding implementation that handles real-time route calculations for multiple vehicles.'
+			"The core of the game is a custom implementation of Dijkstra's algorithm that handles real-time route calculations for multiple vehicles."
+		]}
+	/>
+
+	<ProjectSection
+		title="Design"
+		text={[
+			"The look isn't mine. I recreated Mini Motorways' design closely, as an exercise in working inside a good design system. I think the game is really well designed, and rebuilding it taught me how much of that comes from restraint."
 		]}
 	/>
 
 	<ProjectSection
 		title="Key decisions"
 		text={[
-			'We built a modular event system to manage everything from user input to traffic flow, which kept gameplay responsive as the road network grew.'
+			'I built a modular event system to manage everything from user input to traffic flow, which kept gameplay responsive as the road network grew.'
 		]}
 	/>
 
-	<ProjectSection title="Outcome" text={['A full session, from the first road to total gridlock.']}>
+	<ProjectSection
+		title="The game"
+		text={[
+			'A video walkthrough of the code and the gameplay: the different screens and the algorithms I used.'
+		]}
+	>
 		<div class="aspect-video w-full overflow-hidden rounded-lg border border-line">
 			<iframe
 				title="Mini Motorways video"

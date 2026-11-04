@@ -7,19 +7,29 @@
 		title,
 		text = [],
 		aside,
+		divider,
 		children
 	}: {
 		title: string;
 		text?: string[];
 		/* Small art that sits under the text, in place of a full-width figure. */
 		aside?: () => any;
+		/* Replaces the hairline above the section, for a page that wants its own. */
+		divider?: () => any;
 		children?: () => any;
 	} = $props();
 </script>
 
 <section class="flex flex-col gap-10">
 	<Reveal>
-		<div class="grid grid-cols-1 gap-4 border-t border-line pt-6 md:grid-cols-12 md:gap-10">
+		{#if divider}
+			{@render divider()}
+		{/if}
+		<div
+			class="grid grid-cols-1 gap-4 pt-6 md:grid-cols-12 md:gap-10 {divider
+				? ''
+				: 'border-t border-line'}"
+		>
 			<div class="md:col-span-4">
 				<Heading as="h2" size="heading">{title}</Heading>
 			</div>
