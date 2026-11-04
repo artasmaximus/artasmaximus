@@ -93,7 +93,7 @@
 <div
 	bind:this={road}
 	aria-hidden="true"
-	class="relative mb-6 h-4 w-full rounded-full border-y-2 border-[#E3D9BF] bg-[#FFF3D6]"
+	class="relative mb-6 h-4 w-full rounded-full border-2 border-[#E8E0CC] bg-[#F9F3E5]"
 >
 	{#each COLORS as color, i}
 		<span
