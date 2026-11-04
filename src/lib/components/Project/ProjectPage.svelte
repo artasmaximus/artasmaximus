@@ -11,12 +11,15 @@
 		project,
 		dark = false,
 		hero,
+		backdrop,
 		children
 	}: {
 		project: Project;
 		/* Puts the header on black, up behind the navbar and down into a dark first section. */
 		dark?: boolean;
 		hero?: () => any;
+		/* Decorative art laid behind the page, anchored to its top right. */
+		backdrop?: () => any;
 		children: () => any;
 	} = $props();
 
@@ -25,7 +28,13 @@
 
 <Seo title={project.name} description={project.summary} image={project.cover} />
 
-<article class="flex w-full flex-col gap-16 md:gap-24">
+<article class="relative isolate flex w-full flex-col gap-16 md:gap-24">
+	{#if backdrop}
+		<div aria-hidden="true" class="pointer-events-none absolute inset-x-0 -top-10 -z-10 md:-top-16">
+			{@render backdrop()}
+		</div>
+	{/if}
+
 	<div
 		class={dark
 			? 'relative isolate before:absolute before:-bottom-16 before:-top-[100vh] before:left-1/2 before:-z-10 before:w-screen before:-translate-x-1/2 before:bg-black md:before:-bottom-24'

@@ -25,7 +25,7 @@ export interface Project {
 const all: Project[] = [
 	{
 		slug: 'arcd',
-		name: 'ARCD',
+		name: 'arcd',
 		summary:
 			'A 52-card deck that rebuilds the four suits from nothing but rectangles and circular arcs.',
 		year: '2021–ongoing',
@@ -39,7 +39,7 @@ const all: Project[] = [
 			}
 		],
 		cover: arcdCover,
-		coverAlt: 'The four ARCD aces: clubs, spades, hearts, and diamonds',
+		coverAlt: 'The four arcd aces: clubs, spades, hearts, and diamonds',
 		accent: '#6452FF'
 	},
 	{
