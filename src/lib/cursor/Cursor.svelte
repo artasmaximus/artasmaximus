@@ -1,37 +1,11 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { cursorState, GOLDEN_RATIO } from './CursorState.svelte';
-	import { prefersReducedMotion } from '$lib/utils/motion';
 
 	const SCALE_FACTOR = 1.2;
 	let isExpanded = false;
 	let originalShape: { width: number; height: number; borderRadius: number } | null = null;
 	let rafId: number;
-	let stretchRafId: number;
-
-	// Velocity squash & stretch: the dot elongates along its direction of travel
-	// and settles when it stops. Suppressed while morphed (ring/bubble/pill) so
-	// non-circular shapes never visibly rotate. Off for reduced motion.
-	let stretch = $state({ angle: 0, amount: 0 });
-	let prevPos = { x: 0, y: 0 };
-	const reduceMotion = prefersReducedMotion();
-
-	function stretchLoop() {
-		const { x, y } = cursorState.position.current;
-		const vx = x - prevPos.x;
-		const vy = y - prevPos.y;
-		prevPos = { x, y };
-
-		const speed = Math.hypot(vx, vy);
-		const morphed = cursorState.isHovering || cursorState.isLockedPos || reduceMotion;
-		const target = morphed ? 0 : Math.min(speed * 0.009, 0.22);
-		const ease = morphed ? 0.5 : 0.18;
-
-		stretch.amount += (target - stretch.amount) * ease;
-		if (speed > 2 && !morphed) stretch.angle = Math.atan2(vy, vx);
-
-		stretchRafId = requestAnimationFrame(stretchLoop);
-	}
 
 	function updateCursorPosition(clientX: number, clientY: number) {
 		if (!cursorState.isLockedPos) {
@@ -89,7 +63,6 @@
 			window.addEventListener('pointermove', handleMouseMove, { passive: true });
 			window.addEventListener('pointerdown', handleMouseDown);
 			window.addEventListener('pointerup', handleMouseUp);
-			stretchRafId = requestAnimationFrame(stretchLoop);
 		}
 	});
 
@@ -99,7 +72,6 @@
 			window.removeEventListener('pointerdown', handleMouseDown);
 			window.removeEventListener('pointerup', handleMouseUp);
 			cancelAnimationFrame(rafId);
-			cancelAnimationFrame(stretchRafId);
 		}
 	});
 </script>
@@ -107,9 +79,7 @@
 <span
 	id="custom-cursor"
 	style="transform: translate3d({cursorState.position.current.x}px, {cursorState.position.current
-		.y}px, 0) translate3d(-50%, -50%, 0){stretch.amount > 0.004
-		? ` rotate(${stretch.angle}rad) scale(${1 + stretch.amount}, ${1 / (1 + stretch.amount)})`
-		: ''};
+		.y}px, 0) translate3d(-50%, -50%, 0);
 			width: {cursorState.shape.current.width}px;
 			height: {cursorState.shape.current.height}px;
 			border-radius: {cursorState.shape.current.borderRadius}px;
