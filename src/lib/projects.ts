@@ -46,9 +46,9 @@ const all: Project[] = [
 		slug: 'slimesimulation',
 		name: 'Slime Simulation',
 		summary:
-			'A Physarum simulation in Unity, where thousands of agents following three rules form branching networks.',
+			'A Physarum simulation in Unity, where millions of agents self-organize into emergent structures from local rules.',
 		role: 'Developer',
-		stack: 'Unity, compute shaders',
+		stack: 'Unity 6 · C# · HLSL compute shaders',
 		context: 'Personal project',
 		cover: slimeCover,
 		coverAlt: 'Glowing violet and red trails winding across a black field',

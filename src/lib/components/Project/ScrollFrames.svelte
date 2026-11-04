@@ -11,6 +11,7 @@
 		count,
 		alt,
 		darkAbove = false,
+		overlays = [],
 		width,
 		height
 	}: {
@@ -19,6 +20,8 @@
 		alt: string;
 		/* The page above this section is dark too, so the navbar stays light there. */
 		darkAbove?: boolean;
+		/* Short lines that fade in over the stage between two scroll progress values (0 to 1). */
+		overlays?: { text: string; from: number; to: number }[];
 		width: number;
 		height: number;
 	} = $props();
@@ -28,6 +31,12 @@
 	let container: HTMLDivElement | undefined = $state();
 	let canvas: HTMLCanvasElement | undefined = $state();
 	let reduceMotion = $state(false);
+	let progress = $state(0);
+	const FADE = 0.05;
+
+	function overlayOpacity(from: number, to: number) {
+		return Math.min(Math.max(Math.min((progress - from) / FADE, (to - progress) / FADE), 0), 1);
+	}
 
 	const frames: (HTMLImageElement | undefined)[] = [];
 	let target = 0;
@@ -72,7 +81,7 @@
 
 		if (reduceMotion) return;
 		const range = rect.height - vh;
-		const progress = range > 0 ? Math.min(Math.max(-rect.top / range, 0), 1) : 0;
+		progress = range > 0 ? Math.min(Math.max(-rect.top / range, 0), 1) : 0;
 		target = Math.round(progress * (count - 1));
 		requestDraw();
 	}
@@ -148,5 +157,20 @@
 >
 	<div class="sticky top-0 h-svh w-screen overflow-hidden bg-black" role="img" aria-label={alt}>
 		<canvas bind:this={canvas} {width} {height} class="h-full w-full object-cover"></canvas>
+		{#if !reduceMotion}
+			{#each overlays as overlay}
+				{@const opacity = overlayOpacity(overlay.from, overlay.to)}
+				<div
+					aria-hidden="true"
+					class="pointer-events-none absolute inset-x-0 bottom-0 pb-10 md:pb-16"
+					style:opacity
+					style:transform="translateY({(1 - opacity) * 12}px)"
+				>
+					<div class="page">
+						<p class="max-w-prose text-lead text-white md:text-heading">{overlay.text}</p>
+					</div>
+				</div>
+			{/each}
+		{/if}
 	</div>
 </div>

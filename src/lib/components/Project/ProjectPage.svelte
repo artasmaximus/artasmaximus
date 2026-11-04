@@ -12,6 +12,7 @@
 		dark = false,
 		hero,
 		backdrop,
+		showStack = false,
 		children
 	}: {
 		project: Project;
@@ -20,6 +21,8 @@
 		hero?: () => any;
 		/* Decorative art laid behind the page, anchored to its top right. */
 		backdrop?: () => any;
+		/* Adds the project's stack as a quiet line under the summary, like a placard's medium line. */
+		showStack?: boolean;
 		children: () => any;
 	} = $props();
 
@@ -47,6 +50,15 @@
 					<Text tone={dark ? 'lightMuted' : 'muted'} twclass="max-w-prose text-lead">
 						{project.summary}
 					</Text>
+					{#if showStack}
+						{@const items = project.stack.split(' · ')}
+						<Text tone={dark ? 'lightMuted' : 'muted'} twclass="flex flex-wrap gap-x-4 text-small">
+							{#each items as item, i}
+								<span>{item}</span>
+								{#if i < items.length - 1}<span aria-hidden="true">·</span>{/if}
+							{/each}
+						</Text>
+					{/if}
 				</div>
 
 				{#if project.links?.length}
