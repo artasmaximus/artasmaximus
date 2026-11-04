@@ -33,6 +33,19 @@ export const GLASS_CURSOR_SHAPE: CursorShapeParams = {
 	borderRadius: 20
 };
 
+// Over anything clickable that isn't a button: a thin ring that breathes slowly.
+// It stays difference-blended so it reads on light and dark grounds alike.
+export const LINK_CURSOR_SHAPE: CursorShapeParams = { width: 34, height: 34, borderRadius: 17 };
+export const LINK_CURSOR_STYLE: CursorStyleParams = {
+	background: 'transparent',
+	'mix-blend-mode': 'difference',
+	'border-color': 'white',
+	'border-width': '2px',
+	'backdrop-filter': 'none',
+	'z-index': 9999,
+	animation: 'cursor-pulse 1.8s ease-in-out infinite'
+};
+
 export interface CursorPositionParams {
 	x: number;
 	y: number;
@@ -51,6 +64,7 @@ export interface CursorStyleParams {
 	'border-width'?: string;
 	'backdrop-filter': string;
 	'z-index'?: number;
+	animation?: string;
 }
 
 // The text caret takes the color of the text it sits over.

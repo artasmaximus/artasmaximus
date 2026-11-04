@@ -78,9 +78,10 @@
 
 <span
 	id="custom-cursor"
-	style="transform: translate3d({cursorState.position.current.x}px, {cursorState.position.current
-		.y}px, 0) translate3d(-50%, -50%, 0);
-			width: {cursorState.shape.current.width}px;
+	style="translate: {cursorState.position.current.x -
+			cursorState.shape.current.width / 2}px {cursorState.position.current.y -
+			cursorState.shape.current.height / 2}px;
+				width: {cursorState.shape.current.width}px;
 			height: {cursorState.shape.current.height}px;
 			border-radius: {cursorState.shape.current.borderRadius}px;
 			background: {cursorState.style['background']};
@@ -88,6 +89,7 @@
 			border-color: {cursorState.style['border-color']};
 			border-width: {cursorState.style['border-width'] ?? '0px'};
 			backdrop-filter: {cursorState.style['backdrop-filter']};
+			animation: {cursorState.style['animation'] ?? 'none'};
 			z-index: {cursorState.style['z-index']}"
 ></span>
 
@@ -96,10 +98,27 @@
 		position: fixed;
 		pointer-events: none;
 		z-index: 1000;
-		will-change: transform;
+		will-change: translate, scale;
 		border-style: solid;
 		transition:
 			background 0.05s ease-out,
 			border-color 0.1s ease-out;
+	}
+
+	/* Position lives in `translate`, so `scale` pulses around the cursor's own center. */
+	@keyframes -global-cursor-pulse {
+		0%,
+		100% {
+			scale: 1;
+		}
+		50% {
+			scale: 1.16;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		#custom-cursor {
+			animation: none !important;
+		}
 	}
 </style>

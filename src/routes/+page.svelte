@@ -4,7 +4,7 @@
 	import Reveal from '$lib/components/Reveal.svelte';
 	import Seo from '$lib/components/Seo.svelte';
 	import Text from '$lib/components/Text.svelte';
-	import ProjectList from '$lib/components/Project/ProjectList.svelte';
+	import ProjectIndex from '$lib/components/Project/ProjectIndex.svelte';
 	import Section from '$lib/layout/Section.svelte';
 	import { RESUME_FILENAME, resumeUrl } from '$lib/nav';
 </script>
@@ -16,34 +16,41 @@
 <Section>
 	<div class="flex flex-col gap-24 md:gap-32">
 		<Reveal>
-			<header class="flex flex-col gap-6 pt-6 md:gap-8 md:pt-16">
-				<Heading size="display" twclass="font-semibold">artas alajbegu</Heading>
-				<div class="flex-col">
-					<Text tone="muted" twclass="max-w-prose text-lead">software + design</Text>
-					<Text tone="muted" twclass="max-w-prose text-lead">math + cs @ carnegie mellon</Text>
+			<header class="flex flex-col gap-8 pt-6 md:gap-10 md:pt-16">
+				<div class="flex flex-col gap-6">
+					<Heading size="display" twclass="font-semibold">artas alajbegu</Heading>
+					<div class="flex-col">
+						<Text tone="muted" twclass="max-w-prose text-lead">software + design</Text>
+						<Text tone="muted" twclass="max-w-prose text-lead">math + cs @ carnegie mellon</Text>
+					</div>
 				</div>
+				<Text tone="muted" twclass="max-w-prose text-body">
+					feel free to explore what I've designed, prototyped, built, and more . . .
+				</Text>
 			</header>
 		</Reveal>
 
-		<section aria-labelledby="work">
-			<h2 id="work" class="sr-only">Selected work</h2>
-			<ProjectList />
+		<section aria-label="Selected work" class="flex flex-col gap-8">
+			<Reveal>
+				<div class="flex items-end justify-between gap-6">
+					<Text as="h2" twclass="text-heading">Selected work</Text>
+					<Button href="/projects">All projects</Button>
+				</div>
+			</Reveal>
+			<Reveal>
+				<ProjectIndex />
+			</Reveal>
 		</section>
 
 		<Reveal>
 			<section class="grid grid-cols-1 gap-10 border-t border-line pt-6 md:grid-cols-2">
-				<div class="flex flex-col items-start gap-3">
+				<div class="flex flex-col items-start gap-3 mt-12">
 					<Text as="h2" twclass="text-heading">Artwork</Text>
-					<Text tone="muted" twclass="max-w-prose text-body">
-						Drawings from over the years, each made in Procreate on iPad Pro.
-					</Text>
 					<div class="pt-2"><Button href="/artwork">View artwork</Button></div>
 				</div>
-				<div class="flex flex-col items-start gap-3">
+				<div class="flex flex-col items-start gap-3 mt-12">
 					<Text as="h2" twclass="text-heading">Resume</Text>
-					<Text tone="muted" twclass="max-w-prose text-body">
-						Experience, education, and skills on one page.
-					</Text>
+
 					<div class="pt-2">
 						<Button href={resumeUrl} download={RESUME_FILENAME}>Download PDF</Button>
 					</div>

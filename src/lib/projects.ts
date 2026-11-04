@@ -7,6 +7,8 @@ export interface Project {
 	slug: string;
 	name: string;
 	summary: string;
+	/* A few words for the homepage index, so it doesn't repeat the project page's subtitle. */
+	blurb: string;
 	year?: string;
 	role?: string;
 	stack: string;
@@ -26,6 +28,7 @@ const all: Project[] = [
 	{
 		slug: 'arcd',
 		name: 'arcd',
+		blurb: 'A card deck built from rectangles and arcs.',
 		summary:
 			'A 52-card deck that rebuilds the four suits from nothing but rectangles and circular arcs.',
 		year: '2021–ongoing',
@@ -45,6 +48,7 @@ const all: Project[] = [
 	{
 		slug: 'slimesimulation',
 		name: 'Slime Simulation',
+		blurb: 'An exploration of emergence.',
 		summary:
 			'A Physarum simulation in Unity, where millions of agents self-organize into emergent structures from local rules.',
 		role: 'Developer',
@@ -58,6 +62,7 @@ const all: Project[] = [
 	{
 		slug: 'boomfit',
 		name: 'BoomFit',
+		blurb: 'A fitness app prototype for older adults.',
 		summary:
 			'A fitness app prototype that turns lifestyle aspirations into achievable workout plans for older adults.',
 		year: '2022',
@@ -73,6 +78,7 @@ const all: Project[] = [
 	{
 		slug: 'minimotorways',
 		name: 'Mini Motorways',
+		blurb: 'The Apple Arcade game, recreated in Python.',
 		summary:
 			'A recreation of the Apple Arcade game built from scratch in Python, with custom pathfinding and traffic simulation.',
 		year: '2022',
