@@ -3,6 +3,7 @@
 	import Button from '$lib/components/Button/Button.svelte';
 	import { navTheme } from '$lib/components/Navbar/NavbarState.svelte';
 	import Reveal from '$lib/components/Reveal.svelte';
+	import Text from '$lib/components/Text.svelte';
 	import { projects } from '$lib/projects';
 	import { BG, INK, SURFACE } from '$lib/theme';
 
@@ -44,7 +45,7 @@
 					<div
 						class="page absolute inset-0 flex flex-col items-start justify-end gap-4 pb-8 md:justify-center md:gap-5 md:pb-0"
 					>
-						<h2 class="text-title {dark ? 'text-white' : 'text-ink'}">{project.name}</h2>
+						<Text as="h2" tone={dark ? 'light' : 'ink'} twclass="text-title">{project.name}</Text>
 						<Button
 							href="/projects/{project.slug}"
 							fill={dark ? SURFACE : INK}

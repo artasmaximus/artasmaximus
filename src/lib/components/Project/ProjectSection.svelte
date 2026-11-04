@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Heading from '$lib/components/Heading.svelte';
 	import Reveal from '$lib/components/Reveal.svelte';
+	import Text from '$lib/components/Text.svelte';
 
 	let {
 		title,
@@ -21,7 +22,7 @@
 			</div>
 			<div class="flex flex-col gap-4 md:col-span-8">
 				{#each text as paragraph}
-					<p class="max-w-prose text-body text-ink-muted">{paragraph}</p>
+					<Text tone="muted" twclass="max-w-prose text-body">{paragraph}</Text>
 				{/each}
 			</div>
 		</div>

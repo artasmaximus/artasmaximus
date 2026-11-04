@@ -3,6 +3,7 @@
 	import Heading from '$lib/components/Heading.svelte';
 	import Reveal from '$lib/components/Reveal.svelte';
 	import Seo from '$lib/components/Seo.svelte';
+	import Text from '$lib/components/Text.svelte';
 	import { nextProject, type Project } from '$lib/projects';
 	import { INK, SURFACE } from '$lib/theme';
 
@@ -34,9 +35,9 @@
 			<header class="flex flex-col gap-10">
 				<div class="flex flex-col gap-5">
 					<Heading light={dark}>{project.name}</Heading>
-					<p class="max-w-prose text-lead {dark ? 'text-white/70' : 'text-ink-muted'}">
+					<Text tone={dark ? 'lightMuted' : 'muted'} twclass="max-w-prose text-lead">
 						{project.summary}
-					</p>
+					</Text>
 				</div>
 
 				{#if project.links?.length}

@@ -11,6 +11,7 @@
 		GLASS_CURSOR_STYLE
 	} from '$lib/cursor/CursorState.svelte';
 	import { prefersReducedMotion } from '$lib/utils/motion';
+	import Text from '$lib/components/Text.svelte';
 
 	// Vite bundles all images at build time — no per-card runtime async imports
 	const rawModules = import.meta.glob('/src/lib/assets/artwork/drawing*.jpeg', {
@@ -186,9 +187,9 @@
 	<div class="flex w-full flex-col gap-16">
 		<header class="flex flex-col gap-4">
 			<Heading>Artwork</Heading>
-			<p class="max-w-prose text-lead text-ink-muted">
+			<Text tone="muted" twclass="max-w-prose text-lead">
 				A collection of drawings, each made in Procreate on iPad Pro.
-			</p>
+			</Text>
 		</header>
 
 		<div class="grid w-full gap-8" style="grid-template-columns: repeat({colCount}, 1fr);">

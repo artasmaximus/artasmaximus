@@ -53,20 +53,18 @@ export interface CursorStyleParams {
 	'z-index'?: number;
 }
 
-export function textCursor(
-	color: string,
-	width: number,
-	height: number
-): { shape: CursorShapeParams; style: CursorStyleParams } {
+// The text caret takes the color of the text it sits over.
+export function textCursorStyle(color: string): CursorStyleParams {
 	return {
-		shape: { width, height, borderRadius: width / 2 },
-		style: {
-			background: color,
-			'mix-blend-mode': 'normal',
-			'border-color': 'transparent',
-			'backdrop-filter': 'none'
-		}
+		background: color,
+		'mix-blend-mode': 'normal',
+		'border-color': 'transparent',
+		'backdrop-filter': 'none'
 	};
+}
+
+export function textCursorShape(height: number, width = 3): CursorShapeParams {
+	return { width, height, borderRadius: width / 2 };
 }
 
 export type ClickEffect = (
