@@ -1,17 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Spring } from 'svelte/motion';
+	import { fade } from 'svelte/transition';
 	import Artwork from '$lib/components/Artwork/Artwork.svelte';
+	import Button from '$lib/components/Button/Button.svelte';
 	import Heading from '$lib/components/Heading.svelte';
 	import Seo from '$lib/components/Seo.svelte';
-	import Section from '$lib/layout/Section.svelte';
-	import {
-		cursorState,
-		GLASS_CURSOR_SHAPE,
-		GLASS_CURSOR_STYLE
-	} from '$lib/cursor/CursorState.svelte';
-	import { prefersReducedMotion } from '$lib/utils/motion';
 	import Text from '$lib/components/Text.svelte';
+	import Section from '$lib/layout/Section.svelte';
+	import { prefersReducedMotion } from '$lib/utils/motion';
 
 	// Vite bundles all images at build time — no per-card runtime async imports
 	const rawModules = import.meta.glob('/src/lib/assets/artwork/drawing*.jpeg', {
@@ -55,127 +51,50 @@
 		3: [0.06, -0.05, 0.02]
 	};
 
-	// ---- expand-in-place ------------------------------------------------------
-	interface Expanded {
-		src: string;
-		alt: string;
-		i: number;
-	}
+	// ---- viewer ---------------------------------------------------------------
+	// One piece at a time, centered. Arrows (or the keyboard) step through them.
+	let current = $state<number | null>(null);
+	let dialog = $state<HTMLDivElement>();
+	let opener: HTMLElement | null = null;
+	const fadeMs = reduceMotion ? 0 : 200;
 
-	let tileEls: HTMLElement[] = $state([]);
-	let expanded = $state<Expanded | null>(null);
-	let closing = $state(false);
-	let peek = $state(false);
-	// Drives the overlay's backdrop-filter ramp. Animating blur radius per layer
-	// (not opacity on a parent) keeps the blur composited against the real page,
-	// so it builds and releases in step with the tile motion instead of popping.
-	let overlayOn = $state(false);
-	let closeButton = $state<HTMLButtonElement>();
-	let scatter = $state<Record<number, { dx: number; dy: number; rot: number; delay: number }>>({});
-
-	const stage = new Spring(
-		{ x: 0, y: 0, w: 0, h: 0 },
-		{ stiffness: 0.09, damping: 0.56, precision: 0.1 }
-	);
-
-	function open(detail: { src: string; alt: string }, i: number) {
-		if (expanded || closing) return;
-		const el = tileEls[i];
-		if (!el) return;
-		const rect = el.getBoundingClientRect();
-		if (rect.width === 0) return;
-
-		const aspect = rect.width / rect.height;
-		const tw = Math.min(window.innerWidth * 0.88, window.innerHeight * 0.85 * aspect);
-		const th = tw / aspect;
-
-		stage.set({ x: rect.left, y: rect.top, w: rect.width, h: rect.height }, { instant: true });
-		stage.set(
-			{
-				x: (window.innerWidth - tw) / 2,
-				y: (window.innerHeight - th) / 2,
-				w: tw,
-				h: th
-			},
-			{ instant: reduceMotion }
-		);
-
-		const cx = rect.left + rect.width / 2;
-		const cy = rect.top + rect.height / 2;
-		const push = Math.hypot(window.innerWidth, window.innerHeight) * 0.55;
-		const map: typeof scatter = {};
-		tileEls.forEach((tile, ti) => {
-			if (!tile || ti === i) return;
-			const r = tile.getBoundingClientRect();
-			const dx0 = r.left + r.width / 2 - cx;
-			const dy0 = r.top + r.height / 2 - cy;
-			const len = Math.hypot(dx0, dy0) || 1;
-			map[ti] = {
-				dx: (dx0 / len) * push,
-				dy: (dy0 / len) * push,
-				rot: ((ti * 7919) % 9) - 4,
-				delay: Math.min(len * 0.12, 180)
-			};
-		});
-
-		scatter = map;
-		expanded = { ...detail, i };
-		peek = false;
-		document.body.style.overflow = 'hidden';
-		requestAnimationFrame(() =>
-			requestAnimationFrame(() => {
-				overlayOn = true;
-				closeButton?.focus();
-			})
-		);
+	function open(i: number) {
+		if (current !== null) return;
+		opener = document.activeElement as HTMLElement | null;
+		current = i;
 	}
 
 	function close() {
-		if (!expanded || closing) return;
-		closing = true;
-		peek = false;
-		overlayOn = false;
-		const el = tileEls[expanded.i];
-		if (el) {
-			const rect = el.getBoundingClientRect();
-			stage.set(
-				{ x: rect.left, y: rect.top, w: rect.width, h: rect.height },
-				{ instant: reduceMotion }
-			);
-		}
-		scatter = {};
-		setTimeout(() => {
-			expanded = null;
-			closing = false;
+		current = null;
+	}
+
+	function step(by: number) {
+		if (current === null) return;
+		current = (current + by + srcs.length) % srcs.length;
+	}
+
+	// Lock page scroll while open, focus the close button, and hand focus back after.
+	$effect(() => {
+		if (current === null) return;
+		document.body.style.overflow = 'hidden';
+		dialog?.focus();
+		return () => {
 			document.body.style.overflow = '';
-			el?.querySelector('button')?.focus({ preventScroll: true });
-		}, 700);
-	}
+			opener?.focus({ preventScroll: true });
+		};
+	});
 
-	function tileStyle(i: number) {
-		const s = scatter[i];
-		const base = 'transition: transform 0.65s cubic-bezier(0.3, 1.35, 0.45, 1);';
-		if (expanded && i === expanded.i) return base + ' opacity: 0;';
-		if (!s) return base;
-		const f = peek ? 0.9 : 1;
-		return `transform: translate(${s.dx * f}px, ${s.dy * f}px) rotate(${s.rot * (peek ? 0.8 : 1)}deg); transition: transform 0.65s cubic-bezier(0.3, 1.35, 0.45, 1) ${s.delay}ms;`;
-	}
-
-	// Cursor over the expanded piece: glass circle, and the scene commits.
-	// Cursor off it: everything previews its own return.
-	function onStageEnter() {
-		peek = false;
-		cursorState.isHovering = true;
-		cursorState.setShape(GLASS_CURSOR_SHAPE);
-		cursorState.setStyle(GLASS_CURSOR_STYLE);
-	}
-	function onStageLeave() {
-		cursorState.isHovering = false;
-		cursorState.reset();
-	}
+	// Warm the neighbors so stepping never waits on a download.
+	$effect(() => {
+		if (current === null) return;
+		for (const by of [-1, 1]) new Image().src = srcs[(current + by + srcs.length) % srcs.length];
+	});
 
 	function onKeydown(e: KeyboardEvent) {
+		if (current === null) return;
 		if (e.key === 'Escape') close();
+		else if (e.key === 'ArrowRight') step(1);
+		else if (e.key === 'ArrowLeft') step(-1);
 	}
 </script>
 
@@ -192,18 +111,16 @@
 			</Text>
 		</header>
 
-		<div class="grid w-full gap-8" style="grid-template-columns: repeat({colCount}, 1fr);">
+		<div class="grid w-full gap-7" style="grid-template-columns: repeat({colCount}, 1fr);">
 			{#each cols as col, ci}
 				<div
-					class="flex flex-col gap-8"
+					class="flex flex-col gap-7"
 					style="transform: translateY({colCount > 1 && !reduceMotion
 						? -scrollY * DRIFTS[colCount][ci]
 						: 0}px);"
 				>
 					{#each col as item (item.src)}
-						<div bind:this={tileEls[item.i]} style={tileStyle(item.i)}>
-							<Artwork src={item.src} alt="Drawing {item.i + 1}" onOpen={(d) => open(d, item.i)} />
-						</div>
+						<Artwork src={item.src} alt="Drawing {item.i + 1}" onOpen={() => open(item.i)} />
 					{/each}
 				</div>
 			{/each}
@@ -211,55 +128,106 @@
 	</div>
 </Section>
 
-{#if expanded}
+{#if current !== null}
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
-	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		class="fixed inset-0 z-30"
-		onclick={close}
-		onmousemove={() => {
-			if (!closing) peek = true;
+		bind:this={dialog}
+		tabindex="-1"
+		class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 outline-none backdrop-blur-sm"
+		role="dialog"
+		aria-modal="true"
+		aria-label="Artwork viewer"
+		transition:fade={{ duration: fadeMs }}
+		onclick={(e) => {
+			if (e.target === e.currentTarget) close();
 		}}
 	>
-		{#each [{ max: 2, from: 30, to: 55 }, { max: 7, from: 48, to: 75 }, { max: 16, from: 65, to: 92 }] as layer}
-			<div
-				class="pointer-events-none absolute inset-0"
-				style="backdrop-filter: blur({overlayOn
-					? layer.max
-					: 0}px); -webkit-backdrop-filter: blur({overlayOn
-					? layer.max
-					: 0}px); transition: backdrop-filter 0.65s cubic-bezier(0.4, 0, 0.2, 1), -webkit-backdrop-filter 0.65s cubic-bezier(0.4, 0, 0.2, 1); mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, transparent {layer.from}%, black {layer.to}%); -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, transparent {layer.from}%, black {layer.to}%);"
-			></div>
-		{/each}
-		<div
-			class="pointer-events-none absolute inset-0"
-			style="background: rgba(250, 250, 250, 0.55); mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, transparent 35%, black 80%); -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, transparent 35%, black 80%); opacity: {overlayOn
-				? peek
-					? 1
-					: 0.75
-				: 0}; transition: opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1);"
-		></div>
-	</div>
+		<!-- The row ignores clicks itself, so the gaps count as the backdrop. -->
+		<div class="pointer-events-none flex items-center gap-1 md:gap-8">
+			<div class="pointer-events-auto">
+				<Button
+					blend
+					fill="transparent"
+					fillText="#FFFFFF"
+					border={false}
+					br={12}
+					twclass="flex h-14 w-9 items-center justify-center p-0 md:h-16 md:w-11"
+					onClick={() => step(-1)}
+				>
+					<span class="sr-only">Previous drawing</span>
+					<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+						<path
+							d="M11 3 5 9l6 6"
+							stroke="currentColor"
+							stroke-width="1.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
+					</svg>
+				</Button>
+			</div>
 
-	<button bind:this={closeButton} class="sr-only" onclick={close}>Close artwork</button>
+			{#key current}
+				<img
+					src={srcs[current]}
+					alt="Drawing {current + 1}"
+					class="pointer-events-auto max-h-[80vh] max-w-[calc(100vw-7.5rem)] object-contain md:max-w-[min(70vw,1100px)]"
+					in:fade={{ duration: fadeMs }}
+					onclick={close}
+				/>
+			{/key}
 
-	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	<div
-		class="pointer-events-none fixed z-40"
-		style="left: {stage.current.x}px; top: {stage.current.y}px; width: {stage.current
-			.w}px; height: {stage.current.h}px;"
-	>
-		<div
-			class="pointer-events-auto h-full w-full transition-transform duration-300"
-			style="transform: scale({peek && !closing ? 0.965 : 1});"
-			onmouseenter={onStageEnter}
-			onmouseleave={onStageLeave}
-		>
-			<img
-				src={expanded.src}
-				alt={expanded.alt}
-				class="h-full w-full rounded-lg object-cover shadow-2xl"
-			/>
+			<div class="pointer-events-auto">
+				<Button
+					blend
+					fill="transparent"
+					fillText="#FFFFFF"
+					border={false}
+					br={12}
+					twclass="flex h-14 w-9 items-center justify-center p-0 md:h-16 md:w-11"
+					onClick={() => step(1)}
+				>
+					<span class="sr-only">Next drawing</span>
+					<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+						<path
+							d="m7 3 6 6-6 6"
+							stroke="currentColor"
+							stroke-width="1.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						/>
+					</svg>
+				</Button>
+			</div>
 		</div>
+
+		<div class="absolute right-5 top-5 md:right-8 md:top-8">
+			<Button
+				blend
+				fill="transparent"
+				fillText="#FFFFFF"
+				border={false}
+				br={50}
+				twclass="flex h-11 w-11 items-center justify-center p-0"
+				onClick={close}
+			>
+				<span class="sr-only">Close</span>
+				<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+					<path
+						d="M4 4l10 10M14 4 4 14"
+						stroke="currentColor"
+						stroke-width="1.5"
+						stroke-linecap="round"
+					/>
+				</svg>
+			</Button>
+		</div>
+
+		<p
+			class="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 text-small text-white/70 md:bottom-8"
+			aria-live="polite"
+		>
+			{current + 1} / {srcs.length}
+		</p>
 	</div>
 {/if}

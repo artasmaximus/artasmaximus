@@ -19,7 +19,10 @@
 	class:dark={navTheme.dark}
 	class="sticky left-0 top-0 z-10 w-full bg-none py-5"
 >
-	<div class="gradient-blur pointer-events-none absolute left-0 top-0 h-full w-full">
+	<!-- Runs 1.5rem past the bar, so the blur ramp reaches further down over the labels. -->
+	<div
+		class="gradient-blur pointer-events-none absolute left-0 top-0 h-[calc(100%+1.5rem)] w-full"
+	>
 		<div
 			class="absolute inset-0"
 			style="backdrop-filter: blur(1px); mask-image: linear-gradient(to top, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 20%, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 90%);"
