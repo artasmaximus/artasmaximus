@@ -1,10 +1,27 @@
 <script lang="ts">
 	import ProjectPage from '$lib/components/Project/ProjectPage.svelte';
 	import ProjectSection from '$lib/components/Project/ProjectSection.svelte';
+	import HoverFrames from '$lib/components/Project/HoverFrames.svelte';
 	import ScrollFrames from '$lib/components/Project/ScrollFrames.svelte';
 	import { getProject } from '$lib/projects';
 
 	const project = getProject('slimesimulation');
+
+	// Each clip lives in static/slime-gallery/<folder>/frame_0001.webp and up.
+	const clip = (folder: string, count: number, alt: string) => ({
+		count,
+		alt,
+		frame: (index: number) =>
+			`/slime-gallery/${folder}/frame_${String(index + 1).padStart(4, '0')}.webp`
+	});
+	const clips = [
+		clip('clip-02', 60, 'A ring of light expanding outward as a disc of agents grows into a radiating bloom'),
+		clip('clip-04', 60, 'A pink radial bloom breaking apart into purple and gold tendrils'),
+		clip('clip-03', 61, 'Glowing teal and gold ribbons folding and drifting across a deep blue field'),
+		clip('clip-01', 41, 'Agents settling from a noisy field into a glowing, branching network'),
+		clip('clip-05', 61, 'Cyan filaments winding through a rust-orange field, gold specks settling in'),
+		clip('clip-06', 60, 'Yellow-green rings blooming and merging between winding blue filaments')
+	];
 
 	// Keeps the numbering of the original 240-frame render, of which every second frame shipped.
 	const frame = (index: number) =>
@@ -71,4 +88,18 @@
 			'My biggest takeaway was learning to write code that thousands of threads run at once, and how to structure data for it.'
 		]}
 	/>
+
+	<ProjectSection title="Gallery">
+		<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+			{#each clips as clip}
+				<HoverFrames
+					frame={clip.frame}
+					count={clip.count}
+					width={800}
+					height={450}
+					alt={clip.alt}
+				/>
+			{/each}
+		</div>
+	</ProjectSection>
 </ProjectPage>
