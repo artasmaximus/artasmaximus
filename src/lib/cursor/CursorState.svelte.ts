@@ -20,18 +20,43 @@ export const DEFAULT_STYLE: CursorStyleParams = {
 	'z-index': 9999
 };
 
-export const GLASS_CURSOR_STYLE: CursorStyleParams = {
+export const GLASS_CURSOR_SHAPE: CursorShapeParams = {
+	width: 40,
+	height: 40,
+	borderRadius: 20
+};
+
+// The refracting glass needs `backdrop-filter: url(#...)`, which only Chromium honors
+// (Safari and Firefox ignore it), so everywhere else keeps the frosted look.
+export const SUPPORTS_REFRACTION =
+	typeof navigator !== 'undefined' &&
+	// @ts-expect-error userAgentData is not in the DOM lib yet
+	!!navigator.userAgentData?.brands?.some((b: { brand: string }) => b.brand === 'Chromium');
+
+export const GLASS_FILTER_ID = 'cursor-glass';
+
+const FROSTED_GLASS_STYLE: CursorStyleParams = {
 	background: 'rgba(200, 200, 200, 0.7)',
 	'backdrop-filter': 'blur(15px)',
 	'mix-blend-mode': 'overlay',
 	'border-color': 'rgba(20, 20, 20, 1)'
 };
 
-export const GLASS_CURSOR_SHAPE: CursorShapeParams = {
-	width: 40,
-	height: 40,
-	borderRadius: 20
+// A clear lens: the SVG filter bends, splits and lights what is behind it, and a CSS mask
+// fades the edge out.
+const REFRACTING_GLASS_STYLE: CursorStyleParams = {
+	background: 'rgba(255, 255, 255, 0.04)',
+	'backdrop-filter': `url(#${GLASS_FILTER_ID}) saturate(1.15)`,
+	'mix-blend-mode': 'normal',
+	'border-color': 'transparent',
+	'border-width': '0px',
+	// No hard edge: the lens fades out over its last few pixels instead of ending in a line.
+	'mask-image': 'radial-gradient(closest-side, #000 84%, transparent 100%)'
 };
+
+export const GLASS_CURSOR_STYLE: CursorStyleParams = SUPPORTS_REFRACTION
+	? REFRACTING_GLASS_STYLE
+	: FROSTED_GLASS_STYLE;
 
 // Over anything clickable that isn't a button: a thin ring that breathes slowly.
 // It stays difference-blended so it reads on light and dark grounds alike.
@@ -65,6 +90,8 @@ export interface CursorStyleParams {
 	'backdrop-filter': string;
 	'z-index'?: number;
 	animation?: string;
+	'box-shadow'?: string;
+	'mask-image'?: string;
 }
 
 // The text caret takes the color of the text it sits over.

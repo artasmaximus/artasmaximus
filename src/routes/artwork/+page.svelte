@@ -7,6 +7,8 @@
 	import Seo from '$lib/components/Seo.svelte';
 	import Text from '$lib/components/Text.svelte';
 	import Section from '$lib/layout/Section.svelte';
+	import { cursorState } from '$lib/cursor/CursorState.svelte';
+	import GlassEffect from '$lib/cursor/effects/GlassEffect.svelte';
 	import { prefersReducedMotion } from '$lib/utils/motion';
 
 	// Vite bundles all images at build time — no per-card runtime async imports
@@ -65,6 +67,8 @@
 	}
 
 	function close() {
+		// The image is removed from under the pointer, so no mouseleave will hand the cursor back.
+		cursorState.reset();
 		current = null;
 	}
 
@@ -167,15 +171,18 @@
 				</Button>
 			</div>
 
-			{#key current}
-				<img
-					src={srcs[current]}
-					alt="Drawing {current + 1}"
-					class="pointer-events-auto max-h-[80vh] max-w-[calc(100vw-7.5rem)] object-contain md:max-w-[min(70vw,1100px)]"
-					in:fade={{ duration: fadeMs }}
-					onclick={close}
-				/>
-			{/key}
+			<!-- The glass wrapper stays put while the image keys underneath it, so stepping never strands the cursor. -->
+			<GlassEffect twclass="pointer-events-auto flex">
+				{#key current}
+					<img
+						src={srcs[current]}
+						alt="Drawing {current + 1}"
+						class="max-h-[80vh] max-w-[calc(100vw-7.5rem)] object-contain md:max-w-[min(70vw,1100px)]"
+						in:fade={{ duration: fadeMs }}
+						onclick={close}
+					/>
+				{/key}
+			</GlassEffect>
 
 			<div class="pointer-events-auto">
 				<Button

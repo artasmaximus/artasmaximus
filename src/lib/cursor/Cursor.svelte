@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import { cursorState } from './CursorState.svelte';
+	import GlassFilter from './GlassFilter.svelte';
 
 	const SCALE_FACTOR = 1.2;
 	let isExpanded = false;
@@ -76,6 +77,8 @@
 	});
 </script>
 
+<GlassFilter />
+
 <span
 	id="custom-cursor"
 	style="translate: {cursorState.position.current.x -
@@ -90,6 +93,8 @@
 			border-width: {cursorState.style['border-width'] ?? '0px'};
 			backdrop-filter: {cursorState.style['backdrop-filter']};
 			animation: {cursorState.style['animation'] ?? 'none'};
+			box-shadow: {cursorState.style['box-shadow'] ?? 'none'};
+			mask-image: {cursorState.style['mask-image'] ?? 'none'};
 			z-index: {cursorState.style['z-index']}"
 ></span>
 
