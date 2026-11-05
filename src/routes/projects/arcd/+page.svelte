@@ -36,7 +36,7 @@
 		<img
 			src={origins}
 			alt=""
-			class="absolute -right-[25vw] top-0 w-[110vw] max-w-none opacity-40 [mask-image:linear-gradient(to_bottom,black_70%,transparent)] md:-right-[14vw] md:w-[76vw] md:max-w-[1400px] md:opacity-90"
+			class="absolute -right-[25vw] top-0 w-[110vw] max-w-none opacity-40 [mask-image:linear-gradient(to_bottom,black_70%,transparent)] md:-right-[6vw] md:w-[50vw] md:max-w-[880px] md:opacity-90"
 		/>
 	{/snippet}
 
