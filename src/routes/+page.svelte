@@ -43,17 +43,16 @@
 		</section>
 
 		<Reveal>
-			<section class="grid grid-cols-1 gap-10 border-t border-line pt-6 md:grid-cols-2">
-				<div class="flex flex-col items-start gap-3 mt-12">
+			<section class="grid grid-cols-1 border-t border-line py-10 md:grid-cols-2 md:py-12">
+				<div class="flex items-center justify-between gap-6 py-4 md:pr-8">
 					<Text as="h2" twclass="text-heading">Artwork</Text>
-					<div class="pt-2"><Button href="/artwork">View artwork</Button></div>
+					<Button href="/artwork">View</Button>
 				</div>
-				<div class="flex flex-col items-start gap-3 mt-12">
+				<div
+					class="flex items-center justify-between gap-6 border-t border-line py-4 md:border-l md:border-t-0 md:pl-8"
+				>
 					<Text as="h2" twclass="text-heading">Resume</Text>
-
-					<div class="pt-2">
-						<Button href={resumeUrl} download={RESUME_FILENAME}>Download PDF</Button>
-					</div>
+					<Button href={resumeUrl} download={RESUME_FILENAME}>Download</Button>
 				</div>
 			</section>
 		</Reveal>

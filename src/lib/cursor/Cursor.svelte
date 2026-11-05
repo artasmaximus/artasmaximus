@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { cursorState, GOLDEN_RATIO } from './CursorState.svelte';
+	import { cursorState } from './CursorState.svelte';
 
 	const SCALE_FACTOR = 1.2;
 	let isExpanded = false;
@@ -14,8 +14,8 @@
 			const dx = clientX - cursorState.HoverTargetPos.x;
 			const dy = clientY - cursorState.HoverTargetPos.y;
 			cursorState.setPosition({
-				x: cursorState.HoverTargetPos.x + dx * GOLDEN_RATIO,
-				y: cursorState.HoverTargetPos.y + dy * GOLDEN_RATIO
+				x: cursorState.HoverTargetPos.x + dx * cursorState.lockPull,
+				y: cursorState.HoverTargetPos.y + dy * cursorState.lockPull
 			});
 		}
 	}

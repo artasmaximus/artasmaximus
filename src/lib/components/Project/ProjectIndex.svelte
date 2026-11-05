@@ -1,15 +1,76 @@
 <script lang="ts">
-	import LinkEffect from '$lib/cursor/effects/LinkEffect.svelte';
+	import {
+		cursorState,
+		GOLDEN_RATIO,
+		LINK_CURSOR_SHAPE,
+		LINK_CURSOR_STYLE,
+		type CursorShapeParams,
+		type CursorStyleParams
+	} from '$lib/cursor/CursorState.svelte';
 	import { projects } from '$lib/projects';
+
+	// Over a row the cursor is the usual ring. Come near the arrow and it snaps onto it
+	// as a flat disc (difference-blended, so the arrow inverts); drift away and it relaxes.
+	const DISC_SHAPE: CursorShapeParams = { width: 32, height: 32, borderRadius: 16 };
+	const DISC_STYLE: CursorStyleParams = {
+		background: 'white',
+		'mix-blend-mode': 'difference',
+		'border-color': 'transparent',
+		'border-width': '0px',
+		'backdrop-filter': 'none',
+		'z-index': 9999
+	};
+	const SNAP_IN = 36;
+	const SNAP_OUT = 56;
+
+	let snapped = false;
+
+	function enter() {
+		snapped = false;
+		cursorState.isHovering = true;
+		cursorState.shape.target = LINK_CURSOR_SHAPE;
+		cursorState.setStyle(LINK_CURSOR_STYLE);
+	}
+
+	function move(e: MouseEvent) {
+		const arrow = (e.currentTarget as HTMLElement).querySelector('[data-arrow]');
+		if (!arrow) return;
+		const rect = arrow.getBoundingClientRect();
+		const center = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+		const dist = Math.hypot(e.clientX - center.x, e.clientY - center.y);
+
+		if (!snapped && dist < SNAP_IN) {
+			snapped = true;
+			cursorState.isLockedPos = true;
+			cursorState.lockPull = 0.06;
+			cursorState.HoverTargetPos = center;
+			cursorState.setPosition(center);
+			cursorState.shape.target = DISC_SHAPE;
+			cursorState.setStyle(DISC_STYLE);
+		} else if (snapped && dist > SNAP_OUT) {
+			snapped = false;
+			cursorState.isLockedPos = false;
+			cursorState.lockPull = GOLDEN_RATIO;
+			cursorState.shape.target = LINK_CURSOR_SHAPE;
+			cursorState.setStyle(LINK_CURSOR_STYLE);
+		}
+	}
+
+	function leave() {
+		snapped = false;
+		cursorState.reset();
+	}
 </script>
 
 <!-- A catalog-style index: a hairline above each project, none after the last. -->
 <ul>
 	{#each projects as project (project.slug)}
 		<li class="border-t border-line">
-			<LinkEffect>
 			<a
 				href="/projects/{project.slug}"
+				onmouseenter={enter}
+				onmousemove={move}
+				onmouseleave={leave}
 				class="group grid grid-cols-[1fr_auto] items-center gap-x-6 gap-y-2 py-7 md:grid-cols-12 md:gap-x-10 md:py-9"
 			>
 				<span
@@ -24,7 +85,8 @@
 				</span>
 				<span
 					aria-hidden="true"
-					class="col-start-2 row-start-1 flex h-11 w-11 items-center justify-center justify-self-end rounded-full border border-line text-ink transition-colors duration-300 group-hover:border-ink group-hover:bg-ink group-hover:text-bg md:col-span-1 md:col-start-auto md:row-start-auto"
+					data-arrow
+					class="col-start-2 row-start-1 flex h-8 w-8 items-center justify-center justify-self-end text-ink transition-transform duration-500 ease-out group-hover:translate-x-0.5 md:col-span-1 md:col-start-auto md:row-start-auto"
 				>
 					<svg width="18" height="18" viewBox="0 0 18 18" fill="none">
 						<path
@@ -37,7 +99,6 @@
 					</svg>
 				</span>
 			</a>
-			</LinkEffect>
 		</li>
 	{/each}
 </ul>

@@ -17,7 +17,7 @@
 		download,
 		external = false,
 		border = true,
-		br = 12,
+		br = 50,
 		twclass = 'px-5 py-2.5',
 		onClick,
 		children

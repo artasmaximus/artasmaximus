@@ -41,7 +41,7 @@
 <HoverEffect {hoverShape} {hoverStyle}>
 	<LockEffect {lockPos}>
 		<a href="/" aria-label="Artas Alajbegu, home" class="block font-logo text-heading font-semibold"
-			>AM</a
+			>AA</a
 		>
 	</LockEffect>
 </HoverEffect>

@@ -94,6 +94,9 @@ class CursorState {
 
 	HoverTargetPos = $state<HoverTargetPos>({ x: 0, y: 0 });
 
+	// How far a locked cursor leans toward the real pointer (0 = pinned to its target).
+	lockPull = GOLDEN_RATIO;
+
 	position = new Spring(
 		{ x: 50, y: 50 },
 		{
@@ -118,6 +121,7 @@ class CursorState {
 		this.style = DEFAULT_STYLE;
 		this.isLockedPos = false;
 		this.isHovering = false;
+		this.lockPull = GOLDEN_RATIO;
 	}
 
 	getCenter() {

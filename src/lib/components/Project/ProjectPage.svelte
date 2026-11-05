@@ -92,9 +92,20 @@
 
 	{#if next.slug !== project.slug}
 		<Reveal>
-			<nav aria-label="Next project" class="border-t border-line pt-6">
-				<Button href="/projects/{next.slug}" tint={next.accent} twclass="px-4 py-1.5" br={50}>
-					{next.name} →
+			<nav aria-label="Next project" class="flex justify-end border-t border-line pt-6">
+				<Button href="/projects/{next.slug}" twclass="px-4 py-1.5" br={50}>
+					<span class="flex items-center gap-1.5">
+						{next.name}
+						<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+							<path
+								d="M5 2.5 9.5 7 5 11.5"
+								stroke="currentColor"
+								stroke-width="1.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							/>
+						</svg>
+					</span>
 				</Button>
 			</nav>
 		</Reveal>
