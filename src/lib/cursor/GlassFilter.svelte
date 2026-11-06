@@ -19,12 +19,12 @@
 	const IOR = [1.47, 1.5, 1.54]; // red, green, blue
 	const BEZEL = 0.9; // bevel width as a fraction of the radius
 	const HEIGHT = 16; // how tall the bevel rises
-	const BASE = 40; // thickness of the glass at its very edge
+	const BASE = 50; // thickness of the glass at its very edge
 	// Direction the light travels (z points at the viewer): in from the top-left.
 	const LIGHT = norm([0.5, 0.45, 1]);
 	const CAUSTIC_GAIN = 0.0;
 	// A final Gaussian pass over the result, in pixels, to soften stair-stepping and fringes.
-	const BLUR = 0.0;
+	const BLUR = 0.7;
 
 	type Vec3 = [number, number, number];
 

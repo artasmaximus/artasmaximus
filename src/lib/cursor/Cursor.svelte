@@ -98,7 +98,30 @@
 			z-index: {cursorState.style['z-index']}"
 ></span>
 
+<!-- On top of the lens, which is masked and so can't carry a shadow itself. Its own fill is
+	clear, so the shadow only shows outside the circle and the lens underneath is untouched. -->
+{#if cursorState.style.halo}
+	<span
+		id="custom-cursor-halo"
+		aria-hidden="true"
+		style="translate: {cursorState.position.current.x -
+			cursorState.shape.current.width / 2}px {cursorState.position.current.y -
+			cursorState.shape.current.height / 2}px;
+			width: {cursorState.shape.current.width}px;
+			height: {cursorState.shape.current.height}px;
+			border-radius: {cursorState.shape.current.borderRadius}px;
+			box-shadow: {cursorState.style.halo};
+			z-index: {(cursorState.style['z-index'] ?? 1000) + 1}"
+	></span>
+{/if}
+
 <style>
+	#custom-cursor-halo {
+		position: fixed;
+		pointer-events: none;
+		will-change: translate;
+	}
+
 	#custom-cursor {
 		position: fixed;
 		pointer-events: none;

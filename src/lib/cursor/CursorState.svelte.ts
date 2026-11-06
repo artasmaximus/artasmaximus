@@ -51,7 +51,15 @@ const REFRACTING_GLASS_STYLE: CursorStyleParams = {
 	'border-color': 'transparent',
 	'border-width': '0px',
 	// No hard edge: the lens fades out over its last few pixels instead of ending in a line.
-	'mask-image': 'radial-gradient(closest-side, #000 84%, transparent 100%)'
+	'mask-image': 'radial-gradient(closest-side, #000 84%, transparent 100%)',
+	// Outside: a soft drop shadow plus a tight contact shadow.
+	// Inside: a bright rim on the lit top-left and a dark one on the opposite side.
+	halo: [
+		'-0.5px -0.5px 0.5px rgba(0, 0, 0, 0.78)',
+		// '0 0px 2px rgba(0, 0, 0, 0.20)',
+		'inset 0.8px 0.8px 0.5px rgba(255, 255, 255, 0.75)',
+		'inset -1.5px -1.5px 1.5px rgba(0, 0, 0, 0.22)'
+	].join(', ')
 };
 
 export const GLASS_CURSOR_STYLE: CursorStyleParams = SUPPORTS_REFRACTION
@@ -92,6 +100,9 @@ export interface CursorStyleParams {
 	animation?: string;
 	'box-shadow'?: string;
 	'mask-image'?: string;
+	// Box-shadow for a ring drawn over the cursor's edge: a soft shadow outside it and a
+	// light/dark rim inside it, so a clear lens still shows on a plain light background.
+	halo?: string;
 }
 
 // The text caret takes the color of the text it sits over.
