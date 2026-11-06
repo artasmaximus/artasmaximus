@@ -1,14 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fade } from 'svelte/transition';
 	import Artwork from '$lib/components/Artwork/Artwork.svelte';
-	import Button from '$lib/components/Button/Button.svelte';
 	import Heading from '$lib/components/Heading.svelte';
+	import Lightbox from '$lib/components/Lightbox.svelte';
 	import Seo from '$lib/components/Seo.svelte';
 	import Text from '$lib/components/Text.svelte';
 	import Section from '$lib/layout/Section.svelte';
-	import { cursorState } from '$lib/cursor/CursorState.svelte';
-	import GlassEffect from '$lib/cursor/effects/GlassEffect.svelte';
 	import { prefersReducedMotion } from '$lib/utils/motion';
 
 	// Vite bundles all images at build time — no per-card runtime async imports
@@ -54,55 +51,12 @@
 	};
 
 	// ---- viewer ---------------------------------------------------------------
-	// One piece at a time, centered. Arrows (or the keyboard) step through them.
+	// The shared Lightbox shows one piece at a time; setting `current` opens it.
 	let current = $state<number | null>(null);
-	let dialog = $state<HTMLDivElement>();
-	let opener: HTMLElement | null = null;
-	const fadeMs = reduceMotion ? 0 : 200;
-
-	function open(i: number) {
-		if (current !== null) return;
-		opener = document.activeElement as HTMLElement | null;
-		current = i;
-	}
-
-	function close() {
-		// The image is removed from under the pointer, so no mouseleave will hand the cursor back.
-		cursorState.reset();
-		current = null;
-	}
-
-	function step(by: number) {
-		if (current === null) return;
-		current = (current + by + srcs.length) % srcs.length;
-	}
-
-	// Lock page scroll while open, focus the close button, and hand focus back after.
-	$effect(() => {
-		if (current === null) return;
-		document.body.style.overflow = 'hidden';
-		dialog?.focus();
-		return () => {
-			document.body.style.overflow = '';
-			opener?.focus({ preventScroll: true });
-		};
-	});
-
-	// Warm the neighbors so stepping never waits on a download.
-	$effect(() => {
-		if (current === null) return;
-		for (const by of [-1, 1]) new Image().src = srcs[(current + by + srcs.length) % srcs.length];
-	});
-
-	function onKeydown(e: KeyboardEvent) {
-		if (current === null) return;
-		if (e.key === 'Escape') close();
-		else if (e.key === 'ArrowRight') step(1);
-		else if (e.key === 'ArrowLeft') step(-1);
-	}
+	const items = srcs.map((src, i) => ({ src, alt: `Drawing ${i + 1}` }));
 </script>
 
-<svelte:window bind:scrollY onkeydown={onKeydown} />
+<svelte:window bind:scrollY />
 
 <Seo title="Artwork" description="Drawings by Artas Alajbegu, made in Procreate on iPad Pro." />
 
@@ -124,7 +78,7 @@
 						: 0}px);"
 				>
 					{#each col as item (item.src)}
-						<Artwork src={item.src} alt="Drawing {item.i + 1}" onOpen={() => open(item.i)} />
+						<Artwork src={item.src} alt="Drawing {item.i + 1}" onOpen={() => (current = item.i)} />
 					{/each}
 				</div>
 			{/each}
@@ -132,109 +86,4 @@
 	</div>
 </Section>
 
-{#if current !== null}
-	<!-- svelte-ignore a11y_click_events_have_key_events -->
-	<div
-		bind:this={dialog}
-		tabindex="-1"
-		class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 outline-none backdrop-blur-sm"
-		role="dialog"
-		aria-modal="true"
-		aria-label="Artwork viewer"
-		transition:fade={{ duration: fadeMs }}
-		onclick={(e) => {
-			if (e.target === e.currentTarget) close();
-		}}
-	>
-		<!-- The row ignores clicks itself, so the gaps count as the backdrop. -->
-		<div class="pointer-events-none flex items-center gap-1 md:gap-8">
-			<div class="pointer-events-auto">
-				<Button
-					blend
-					fill="transparent"
-					fillText="#FFFFFF"
-					border={false}
-					br={12}
-					twclass="flex h-14 w-9 items-center justify-center p-0 md:h-16 md:w-11"
-					onClick={() => step(-1)}
-				>
-					<span class="sr-only">Previous drawing</span>
-					<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-						<path
-							d="M11 3 5 9l6 6"
-							stroke="currentColor"
-							stroke-width="1.5"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</svg>
-				</Button>
-			</div>
-
-			<!-- The glass wrapper stays put while the image keys underneath it, so stepping never strands the cursor. -->
-			<GlassEffect twclass="pointer-events-auto flex">
-				{#key current}
-					<img
-						src={srcs[current]}
-						alt="Drawing {current + 1}"
-						class="max-h-[80vh] max-w-[calc(100vw-7.5rem)] object-contain md:max-w-[min(70vw,1100px)]"
-						in:fade={{ duration: fadeMs }}
-						onclick={close}
-					/>
-				{/key}
-			</GlassEffect>
-
-			<div class="pointer-events-auto">
-				<Button
-					blend
-					fill="transparent"
-					fillText="#FFFFFF"
-					border={false}
-					br={12}
-					twclass="flex h-14 w-9 items-center justify-center p-0 md:h-16 md:w-11"
-					onClick={() => step(1)}
-				>
-					<span class="sr-only">Next drawing</span>
-					<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-						<path
-							d="m7 3 6 6-6 6"
-							stroke="currentColor"
-							stroke-width="1.5"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-					</svg>
-				</Button>
-			</div>
-		</div>
-
-		<div class="absolute right-5 top-5 md:right-8 md:top-8">
-			<Button
-				blend
-				fill="transparent"
-				fillText="#FFFFFF"
-				border={false}
-				br={50}
-				twclass="flex h-11 w-11 items-center justify-center p-0"
-				onClick={close}
-			>
-				<span class="sr-only">Close</span>
-				<svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-					<path
-						d="M4 4l10 10M14 4 4 14"
-						stroke="currentColor"
-						stroke-width="1.5"
-						stroke-linecap="round"
-					/>
-				</svg>
-			</Button>
-		</div>
-
-		<p
-			class="pointer-events-none absolute bottom-6 left-1/2 -translate-x-1/2 text-small text-white/70 md:bottom-8"
-			aria-live="polite"
-		>
-			{current + 1} / {srcs.length}
-		</p>
-	</div>
-{/if}
+<Lightbox {items} bind:current label="Artwork viewer" noun="drawing" />

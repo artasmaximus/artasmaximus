@@ -7,7 +7,12 @@
 	import symbolsRed from '$lib/assets/arcdpics/symbols-red.png';
 	import symbolsBlue from '$lib/assets/arcdpics/symbols-blue.png';
 	import dap from '$lib/assets/arcdpics/designapproach.png';
+	import renderGrid from '$lib/assets/arcdpics/render-deck-grid.webp';
+	import renderAces from '$lib/assets/arcdpics/render-aces.webp';
+	import renderCourts from '$lib/assets/arcdpics/render-courts.webp';
+	import renderFrontBack from '$lib/assets/arcdpics/render-front-back.webp';
 	import Figure from '$lib/components/Project/Figure.svelte';
+	import Lightbox from '$lib/components/Lightbox.svelte';
 	import ProjectPage from '$lib/components/Project/ProjectPage.svelte';
 	import ProjectSection from '$lib/components/Project/ProjectSection.svelte';
 	import GlassEffect from '$lib/cursor/effects/GlassEffect.svelte';
@@ -22,6 +27,15 @@
 		'group-hover:[transition-delay:70ms]',
 		'group-hover:[transition-delay:35ms]'
 	];
+
+	// The renders in the gallery, which open full screen when clicked.
+	const renders = [
+		{ src: renderGrid, alt: 'All 52 cards of the deck laid out in a grid, with three extra cards beside it' },
+		{ src: renderAces, alt: 'The four aces stacked together' },
+		{ src: renderCourts, alt: 'The jack of spades, queen of diamonds, and king of clubs' },
+		{ src: renderFrontBack, alt: 'An ace of spades beside a card back with its patterned design' }
+	];
+	let viewing = $state<number | null>(null);
 
 	const cards = [
 		{ src: aceHearts, alt: 'Ace of hearts' },
@@ -104,8 +118,22 @@
 	</ProjectSection>
 
 	<ProjectSection
+		title="The deck"
+		text={['High-fidelity renders from a custom rendering engine I built.']}
+	>
+		<div class="flex flex-col gap-4 md:gap-6">
+			<Figure {...renders[0]} onOpen={() => (viewing = 0)} />
+			<div class="grid grid-cols-1 gap-4 sm:grid-cols-3 md:gap-6">
+				{#each renders.slice(1) as render, i}
+					<Figure {...render} onOpen={() => (viewing = i + 1)} />
+				{/each}
+			</div>
+		</div>
+	</ProjectSection>
+
+	<ProjectSection
 		title="Outcome"
-		text={['The full deck lives in Figma: every suit, court card, and color token.']}
+		text={['Explore the full deck in Figma.']}
 	>
 		<iframe
 			title="arcd Figma file"
@@ -115,3 +143,5 @@
 		></iframe>
 	</ProjectSection>
 </ProjectPage>
+
+<Lightbox items={renders} bind:current={viewing} label="Deck renders" noun="render" mat />

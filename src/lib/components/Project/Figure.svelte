@@ -5,7 +5,8 @@
 		src,
 		alt,
 		mat = false,
-		bare = false
+		bare = false,
+		onOpen
 	}: {
 		src: string;
 		alt: string;
@@ -13,6 +14,8 @@
 		mat?: boolean;
 		/* Drops the card, so a transparent image sits straight on the page. */
 		bare?: boolean;
+		/* Makes the image a button that calls this, e.g. to open it in a lightbox. */
+		onOpen?: () => void;
 	} = $props();
 </script>
 
@@ -25,13 +28,25 @@
 						mat ? 'flex justify-center p-8 md:p-16' : ''
 					}`}
 		>
-			<img
-				{src}
-				{alt}
-				loading="lazy"
-				decoding="async"
-				class={mat && !bare ? 'max-h-[70vh] w-auto' : 'w-full'}
-			/>
+			{#if onOpen}
+				<button type="button" class="block w-full" aria-label="Expand {alt}" onclick={onOpen}>
+					<img
+						{src}
+						{alt}
+						loading="lazy"
+						decoding="async"
+						class={mat && !bare ? 'max-h-[70vh] w-auto' : 'w-full'}
+					/>
+				</button>
+			{:else}
+				<img
+					{src}
+					{alt}
+					loading="lazy"
+					decoding="async"
+					class={mat && !bare ? 'max-h-[70vh] w-auto' : 'w-full'}
+				/>
+			{/if}
 		</div>
 	</GlassEffect>
 </figure>

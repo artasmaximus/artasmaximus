@@ -19,6 +19,8 @@ export interface Project {
 	coverAlt?: string;
 	/* Set when the cover is dark, so its title and the navbar over it go light. */
 	coverTone?: 'dark';
+	/* CSS object-position for the cover when the tile crops it (narrow screens). */
+	coverPosition?: string;
 	/* Reachable by URL, but left out of lists until it has imagery. */
 	draft?: boolean;
 }
@@ -56,19 +58,14 @@ const all: Project[] = [
 		name: 'arcd',
 		blurb: 'An exercise in theming and consistency.',
 		summary:
-			'A 52-card deck that rebuilds the four suits from nothing but rectangles and circular arcs.',
+			'A 52-card deck that reimagines the four suits from two core shapes.',
 		year: '2021–ongoing',
 		role: 'Designer',
 		stack: 'Figma',
 		context: 'Personal project',
-		links: [
-			{
-				label: 'Figma file',
-				href: 'https://www.figma.com/design/eRPB90nCMuDbk89wBRW5zW/Card-Deck-Master'
-			}
-		],
 		cover: arcdCover,
-		coverAlt: 'The four arcd aces: clubs, spades, hearts, and diamonds'
+		coverAlt: 'Playing cards from the arcd deck tumbling through the air above a soft shadow',
+		coverPosition: '78% 50%'
 	},
 	{
 		slug: 'boomfit',

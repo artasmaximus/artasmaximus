@@ -41,6 +41,7 @@
 						loading="lazy"
 						decoding="async"
 						class="absolute inset-0 h-full w-full object-cover"
+						style:object-position={project.coverPosition}
 					/>
 					<div
 						class="page absolute inset-0 flex flex-col items-start justify-end gap-4 pb-8 md:justify-center md:gap-5 md:pb-0"
