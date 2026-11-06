@@ -67,7 +67,6 @@
 							<Button
 								href={link.href}
 								external
-								tint={project.accent}
 								fill={dark ? SURFACE : undefined}
 								fillText={dark ? INK : undefined}
 								br={50}

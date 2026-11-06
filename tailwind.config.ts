@@ -32,6 +32,8 @@ export default {
 				'Arial',
 				'sans-serif'
 			],
+			// Code and table names inside recreated tool screens, not site typography
+			mono: ['JetBrains Mono Variable', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
 			// The AM logo only
 			logo: ['Urbanist Variable', 'sans-serif']
 		},
