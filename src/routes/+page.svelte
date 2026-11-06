@@ -7,6 +7,7 @@
 	import ProjectIndex from '$lib/components/Project/ProjectIndex.svelte';
 	import Section from '$lib/layout/Section.svelte';
 	import { RESUME_FILENAME, resumeUrl } from '$lib/nav';
+	import AtSign from '$lib/icons/AtSign.svelte';
 </script>
 
 <Seo
@@ -21,7 +22,12 @@
 					<Heading size="display" twclass="font-semibold">artas alajbegu</Heading>
 					<div class="flex-col">
 						<Text tone="muted" twclass="max-w-prose text-lead">software + design</Text>
-						<Text tone="muted" twclass="max-w-prose text-lead">math + cs @ carnegie mellon</Text>
+						<Text tone="muted" twclass="max-w-prose text-lead">math + cs <AtSign
+							height="0.95em"
+							fill="currentColor"
+							style="display: inline-block; vertical-align: -0.14em; margin-inline: 0.05em"
+						/> carnegie mellon</Text
+					>
 					</div>
 				</div>
 				<Text tone="muted" twclass="max-w-prose text-body">
