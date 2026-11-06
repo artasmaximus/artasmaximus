@@ -21,7 +21,7 @@
 			aria-label={open ? 'Hide social links' : 'Show social links'}
 			onclick={() => (open = !open)}
 		>
-			<AtSign />
+			<AtSign height="20px" fill="currentColor" />
 		</button>
 	</BubbleEffect>
 
@@ -79,7 +79,7 @@
 		top: 0;
 	}
 	.icon:nth-child(2) {
-		top: 3rem;
+		top: 2.5rem;
 	}
 
 	.atSignButton {

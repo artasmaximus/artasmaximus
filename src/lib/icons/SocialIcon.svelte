@@ -55,8 +55,8 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 24px;
-		height: 24px;
+		width: 18px;
+		height: 18px;
 		z-index: 3;
 	}
 

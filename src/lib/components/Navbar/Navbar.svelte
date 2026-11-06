@@ -63,7 +63,6 @@
 	}
 
 	nav :global(.btn),
-	nav :global(.atSignButton svg path),
 	nav :global(.icon-container svg path) {
 		transition:
 			color 0.4s ease,
@@ -81,7 +80,6 @@
 		color: #fafafa !important;
 	}
 
-	nav.dark :global(.atSignButton svg path),
 	nav.dark :global(.icon-container svg path) {
 		fill: #fafafa !important;
 	}
