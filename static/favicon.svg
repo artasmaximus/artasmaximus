@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+	<style>
+		.ring { fill: none; stroke: #1A1A1A; }
+		.stem { fill: #1A1A1A; }
+		@media (prefers-color-scheme: dark) {
+			.ring { stroke: #FAFAFA; }
+			.stem { fill: #FAFAFA; }
+		}
+	</style>
+	<g transform="translate(7.43 4) scale(0.857)">
+		<path
+			class="ring"
+			d="M19 16.8V9A8 8 0 0 0 11 1H9A8 8 0 0 0 1 9V19A8 8 0 0 0 9 27H11A8 8 0 0 0 18.15 22.9"
+			stroke-width="2.4"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		/>
+		<path class="stem" d="M8.3 9A1.7 1.7 0 0 1 11.7 9V16.3H19V17.8H9.3A1 1 0 0 1 8.3 16.8Z" />
+	</g>
+</svg>
