@@ -61,7 +61,7 @@
 
 <MockWindow
 	title="etl-tool.internal/sanity-check"
-	label="A data sanity-check report in light colors with a purple accent: a sidebar with the report title, client name, and key metrics, and a page for the bets table with a summary card and four charts titled by their SQL"
+	label="A sanity-check report in light colors with a purple accent: a sidebar with the report title, client name, and key metrics, and a page for the bets table with a summary card and four charts titled by their SQL"
 >
 	<div class="flex bg-surface text-[#31333F]">
 		<div

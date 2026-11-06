@@ -27,8 +27,8 @@ export interface Project {
 const all: Project[] = [
 	{
 		slug: 'data-sanity-check',
-		name: 'Data Sanity Check',
-		blurb: 'A Streamlit tool that cut a client deliverable creation from days to minutes.',
+		name: 'Sanity Check',
+		blurb: 'A custom Streamlit app for report creation.',
 		summary:
 			'A Streamlit tool that replaced a days-long notebook workflow with a client data report you can generate in about two minutes.',
 		role: 'Developer and designer',
@@ -54,7 +54,7 @@ const all: Project[] = [
 	{
 		slug: 'arcd',
 		name: 'arcd',
-		blurb: 'A card deck built from rectangles and arcs.',
+		blurb: 'An exercise in theming and consistency.',
 		summary:
 			'A 52-card deck that rebuilds the four suits from nothing but rectangles and circular arcs.',
 		year: '2021–ongoing',
