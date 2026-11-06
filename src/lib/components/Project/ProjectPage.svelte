@@ -67,7 +67,6 @@
 							<Button
 								href={link.href}
 								external
-								tint={project.accent}
 								fill={dark ? SURFACE : undefined}
 								fillText={dark ? INK : undefined}
 								br={50}
@@ -92,8 +91,8 @@
 
 	{#if next.slug !== project.slug}
 		<Reveal>
-			<nav aria-label="Next project" class="border-t border-line pt-6">
-				<Button href="/projects/{next.slug}" tint={next.accent} twclass="px-4 py-1.5" br={50}>
+			<nav aria-label="Next project" class="flex justify-end border-t border-line pt-6">
+				<Button href="/projects/{next.slug}" twclass="px-4 py-1.5" br={50}>
 					{next.name} →
 				</Button>
 			</nav>

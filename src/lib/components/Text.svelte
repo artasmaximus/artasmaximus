@@ -5,12 +5,13 @@
 		type CursorShapeParams
 	} from '$lib/cursor/CursorState.svelte';
 	import HoverEffect from '$lib/cursor/effects/HoverEffect.svelte';
-	import { INK, INK_MUTED, SURFACE } from '$lib/theme';
+	import { INK, INK_MUTED, INK_SUBTLE, SURFACE } from '$lib/theme';
 
 	// One tone sets the text color and the caret color, so they always match.
 	const tones = {
 		ink: { cls: 'text-ink', color: INK },
 		muted: { cls: 'text-ink-muted', color: INK_MUTED },
+		subtle: { cls: 'text-ink-subtle', color: INK_SUBTLE },
 		light: { cls: 'text-white', color: SURFACE },
 		lightMuted: { cls: 'text-white/70', color: 'rgba(255, 255, 255, 0.7)' }
 	};

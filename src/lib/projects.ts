@@ -1,5 +1,6 @@
 import arcdCover from '$lib/assets/thumbnails/arcd.jpg';
 import boomfitCover from '$lib/assets/thumbnails/boomfit.jpg';
+import sanityCheckCover from '$lib/assets/thumbnails/data-sanity-check.svg';
 import minimotorwaysCover from '$lib/assets/thumbnails/minimotorways.svg';
 import slimeCover from '$lib/assets/thumbnails/slime.jpg';
 
@@ -18,13 +19,38 @@ export interface Project {
 	coverAlt?: string;
 	/* Set when the cover is dark, so its title and the navbar over it go light. */
 	coverTone?: 'dark';
-	/* Cursor bubble fill on this project's links. Dark enough to carry white text. */
-	accent: string;
 	/* Reachable by URL, but left out of lists until it has imagery. */
 	draft?: boolean;
 }
 
+/* The order here is the order on the homepage index and the projects page. */
 const all: Project[] = [
+	{
+		slug: 'data-sanity-check',
+		name: 'Data Sanity Check',
+		blurb: 'A Streamlit tool that cut a client deliverable creation from days to minutes.',
+		summary:
+			'A Streamlit tool that replaced a days-long notebook workflow with a client data report you can generate in about two minutes.',
+		role: 'Developer and designer',
+		stack: 'Streamlit · Snowflake · Python · HTML/CSS',
+		context: 'Work project',
+		cover: sanityCheckCover,
+		coverAlt:
+			'A light report window with a sidebar and four small charts, with stacked pages behind it'
+	},
+	{
+		slug: 'slimesimulation',
+		name: 'Slime Simulation',
+		blurb: 'An exploration of emergence.',
+		summary:
+			'A Physarum simulation in Unity, where millions of agents self-organize into emergent structures from local rules.',
+		role: 'Developer',
+		stack: 'Unity 6 · C# · HLSL compute shaders',
+		context: 'Personal project',
+		cover: slimeCover,
+		coverAlt: 'Glowing violet and red trails winding across a black field',
+		coverTone: 'dark'
+	},
 	{
 		slug: 'arcd',
 		name: 'arcd',
@@ -42,22 +68,7 @@ const all: Project[] = [
 			}
 		],
 		cover: arcdCover,
-		coverAlt: 'The four arcd aces: clubs, spades, hearts, and diamonds',
-		accent: '#6452FF'
-	},
-	{
-		slug: 'slimesimulation',
-		name: 'Slime Simulation',
-		blurb: 'An exploration of emergence.',
-		summary:
-			'A Physarum simulation in Unity, where millions of agents self-organize into emergent structures from local rules.',
-		role: 'Developer',
-		stack: 'Unity 6 · C# · HLSL compute shaders',
-		context: 'Personal project',
-		cover: slimeCover,
-		coverAlt: 'Glowing violet and red trails winding across a black field',
-		coverTone: 'dark',
-		accent: '#00804B'
+		coverAlt: 'The four arcd aces: clubs, spades, hearts, and diamonds'
 	},
 	{
 		slug: 'boomfit',
@@ -72,8 +83,7 @@ const all: Project[] = [
 		links: [{ label: 'Prototype', href: 'https://figma.fun/upfXT4' }],
 		cover: boomfitCover,
 		coverAlt: 'The BoomFit sign-in screen on a phone',
-		coverTone: 'dark',
-		accent: '#0F7F76'
+		coverTone: 'dark'
 	},
 	{
 		slug: 'minimotorways',
@@ -87,8 +97,7 @@ const all: Project[] = [
 		context: 'University term project',
 		links: [{ label: 'Video', href: 'https://www.youtube.com/watch?v=GaAHKJQ6lcY' }],
 		cover: minimotorwaysCover,
-		coverAlt: 'A mosaic of tiles showing roads, houses, and malls from the Mini Motorways recreation',
-		accent: '#8A6B1F'
+		coverAlt: 'A mosaic of tiles showing roads, houses, and malls from the Mini Motorways recreation'
 	}
 ];
 
