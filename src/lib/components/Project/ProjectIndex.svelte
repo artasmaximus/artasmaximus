@@ -7,7 +7,10 @@
 		type CursorShapeParams,
 		type CursorStyleParams
 	} from '$lib/cursor/CursorState.svelte';
-	import { projects } from '$lib/projects';
+	import { projects, type Project } from '$lib/projects';
+
+	// Defaults to every project; pass a shorter list for a selection.
+	let { items = projects }: { items?: Project[] } = $props();
 
 	// Over a row the cursor is the usual ring. Come near the arrow and it snaps onto it
 	// as a flat disc (difference-blended, so the arrow inverts); drift away and it relaxes.
@@ -64,7 +67,7 @@
 
 <!-- A catalog-style index: a hairline above each project, none after the last. -->
 <ul>
-	{#each projects as project (project.slug)}
+	{#each items as project (project.slug)}
 		<li class="border-t border-line">
 			<a
 				href="/projects/{project.slug}"

@@ -21,6 +21,8 @@ export interface Project {
 	coverTone?: 'dark';
 	/* CSS object-position for the cover when the tile crops it (narrow screens). */
 	coverPosition?: string;
+	/* Shown in the short selection on the homepage; the rest live on the Projects page. */
+	featured?: boolean;
 	/* Reachable by URL, but left out of lists until it has imagery. */
 	draft?: boolean;
 }
@@ -29,6 +31,7 @@ export interface Project {
 const all: Project[] = [
 	{
 		slug: 'data-sanity-check',
+		featured: true,
 		name: 'Sanity Check',
 		blurb: 'A custom Streamlit app for report creation.',
 		summary:
@@ -42,6 +45,7 @@ const all: Project[] = [
 	},
 	{
 		slug: 'slimesimulation',
+		featured: true,
 		name: 'Slime Simulation',
 		blurb: 'An exploration of emergence.',
 		summary:
@@ -55,6 +59,7 @@ const all: Project[] = [
 	},
 	{
 		slug: 'arcd',
+		featured: true,
 		name: 'arcd',
 		blurb: 'An exercise in theming and consistency.',
 		summary:
@@ -99,6 +104,7 @@ const all: Project[] = [
 ];
 
 export const projects = all.filter((project) => !project.draft);
+export const featuredProjects = projects.filter((project) => project.featured);
 
 export function getProject(slug: string): Project {
 	const project = all.find((p) => p.slug === slug);
