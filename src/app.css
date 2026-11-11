@@ -2,6 +2,14 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/* Registered so the navbar can transition it: it scales the bar's progressive
+   blur and contents together as the bar enters and leaves. */
+@property --nav-reveal {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 1;
+}
+
 @layer base {
 	html {
 		@apply bg-bg font-sans text-body text-ink antialiased;

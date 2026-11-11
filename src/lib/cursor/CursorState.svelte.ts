@@ -66,6 +66,11 @@ export const GLASS_CURSOR_STYLE: CursorStyleParams = SUPPORTS_REFRACTION
 	? REFRACTING_GLASS_STYLE
 	: FROSTED_GLASS_STYLE;
 
+// Over water: a small needle point. The water's dimple and wake are the
+// feedback, so the cursor stays tiny and difference-blended to read on any image.
+export const NEEDLE_CURSOR_SHAPE: CursorShapeParams = { width: 6, height: 6, borderRadius: 3 };
+export const NEEDLE_CURSOR_STYLE: CursorStyleParams = DEFAULT_STYLE;
+
 // Over anything clickable that isn't a button: a thin ring that breathes slowly.
 // It stays difference-blended so it reads on light and dark grounds alike.
 export const LINK_CURSOR_SHAPE: CursorShapeParams = { width: 34, height: 34, borderRadius: 17 };
