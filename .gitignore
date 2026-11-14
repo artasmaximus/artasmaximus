@@ -25,8 +25,3 @@ vite.config.ts.timestamp-*
 # claude
 .claude
 
-# Set aside: Spectral (Minecraft shader) project, until the shader exists
-src/routes/projects/spectral/
-src/lib/spectral/
-static/spectral/
-src/lib/assets/thumbnails/spectral.png

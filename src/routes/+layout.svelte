@@ -6,6 +6,7 @@
 	import Cursor from '$lib/cursor/Cursor.svelte';
 	import { cursorState } from '$lib/cursor/CursorState.svelte';
 	import { afterNavigate } from '$app/navigation';
+	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 	let { children } = $props();
 	let hasFinePointer = $state(false);
@@ -33,5 +34,7 @@
 	<main id="main" tabindex="-1" class="outline-none">
 		{@render children()}
 	</main>
-	<Footer />
+	{#if !page.url.pathname.startsWith('/playground')}
+		<Footer />
+	{/if}
 </div>
