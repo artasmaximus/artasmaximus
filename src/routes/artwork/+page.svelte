@@ -4,7 +4,6 @@
 	import Lightbox from '$lib/components/Lightbox.svelte';
 	import { navTheme } from '$lib/components/Navbar/NavbarState.svelte';
 	import Seo from '$lib/components/Seo.svelte';
-	import WaterPanel from '$lib/water/WaterPanel.svelte';
 
 	// Vite bundles all images at build time — no per-card runtime async imports
 	const rawModules = import.meta.glob('/src/lib/assets/artwork/drawing*.jpeg', {
@@ -72,5 +71,3 @@
 
 <Lightbox {items} bind:current label="Artwork viewer" noun="drawing" />
 
-<!-- For exploring the water; remove once the values are settled. -->
-<WaterPanel />
